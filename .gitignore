@@ -1,0 +1,4 @@
+sokoban
+*.o
+*.out
+*.txt
