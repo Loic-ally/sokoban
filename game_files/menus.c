@@ -42,7 +42,7 @@ void saveScore(Player player)
     fclose(file);
 }
 
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level)
+void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int minBoxes, int maxBoxes)
 {
     sfVector2f mousePos;
     sfText* promptText = sfText_create();
@@ -57,6 +57,7 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
     sfText* buttonText2 = sfText_create();
     sfRectangleShape* button3 = sfRectangleShape_create();
     sfText* buttonText3 = sfText_create();
+    int newDifficulty;
 
     sfText_setFont(promptText, font);
     sfText_setCharacterSize(promptText, 24);
@@ -110,12 +111,12 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
                     button2Bounds = sfRectangleShape_getGlobalBounds(button2);
                     button3Bounds = sfRectangleShape_getGlobalBounds(button3);
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
-                        saveScore(*player);
+                        freeLevel(*level);
+                        *level = generateLevel(minBoxes, maxBoxes);
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
-                        int newDifficulty = selectDifficulty(window, font);
+                        newDifficulty = selectDifficulty(window, font);
                         player->difficulty = newDifficulty;
-                        int minBoxes, maxBoxes;
                         switch (player->difficulty) {
                             case 1:
                                 minBoxes = 1;
@@ -140,9 +141,6 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
                         }
                         freeLevel(*level);
                         *level = generateLevel(minBoxes, maxBoxes);
-                        menuOpen = false;
-                    } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
-                        sfRenderWindow_close(window);
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
                         sfRenderWindow_close(window);

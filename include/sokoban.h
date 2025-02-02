@@ -64,7 +64,7 @@ bool canReachTarget(Level* level, Position box, Position target);
 Position getRandomEmptyPosition(Level* level);
 bool isValid(int x, int y);
 void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level **level);
+void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level **level, int minboxes, int maxboxes);
 void saveScore(Player player);
 int getNumBoxesForDifficulty(int difficulty);
 

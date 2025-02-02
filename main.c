@@ -81,7 +81,7 @@ int main(void)
                         level = generateLevel(minBoxes, maxBoxes);
                         break;
                     case sfKeyEscape:
-                        displayMenu(window, font, &player, &level);
+                        displayMenu(window, font, &player, &level, minBoxes, maxBoxes);
                         switch (player.difficulty) {
                             case 1:
                                 minBoxes = 1;
@@ -110,7 +110,7 @@ int main(void)
                 }
                 if (checkWin(level)) {
                     player.score += 100;
-                    displayMenu(window, font, &player, &level);
+                    displayMenu(window, font, &player, &level, minBoxes, maxBoxes);
                 }
             }
         }

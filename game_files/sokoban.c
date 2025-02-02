@@ -74,23 +74,24 @@ bool isMapSolvable(Level* level)
 Level* generateLevel(int minBoxes, int maxBoxes)
 {
     Level* level;
+    bool solvable = false;
 
-    do {
+    while (!solvable) {
         level = (Level*)malloc(sizeof(Level));
         level->numBoxes = minBoxes + rand() % (maxBoxes - minBoxes + 1);
         level->boxes = (Position*)malloc(level->numBoxes * sizeof(Position));
         level->targets = (Position*)malloc(level->numBoxes * sizeof(Position));
-        
+
         for (int y = 0; y < MAX_HEIGHT; y++) {
             for (int x = 0; x < MAX_WIDTH; x++) {
-                if (x == 0 || x == MAX_WIDTH-1 || y == 0 || y == MAX_HEIGHT-1)
+                if (x == 0 || x == MAX_WIDTH - 1 || y == 0 || y == MAX_HEIGHT - 1)
                     level->grid[y][x] = '#';
                 else
                     level->grid[y][x] = ' ';
             }
         }
-        for (int y = 1; y < MAX_HEIGHT-1; y++) {
-            for (int x = 1; x < MAX_WIDTH-1; x++) {
+        for (int y = 1; y < MAX_HEIGHT - 1; y++) {
+            for (int x = 1; x < MAX_WIDTH - 1; x++) {
                 if (rand() % 100 < 30) {
                     level->grid[y][x] = '#';
                 }
@@ -103,13 +104,17 @@ Level* generateLevel(int minBoxes, int maxBoxes)
                 level->boxes[i] = getRandomEmptyPosition(level);
             } while (level->grid[level->boxes[i].y][level->boxes[i].x] == 'T');
             level->grid[level->boxes[i].y][level->boxes[i].x] = 'B';
-            
+
             do {
                 level->targets[i] = getRandomEmptyPosition(level);
             } while (level->grid[level->targets[i].y][level->targets[i].x] == 'B');
             level->grid[level->targets[i].y][level->targets[i].x] = 'T';
         }
-    } while (!isMapSolvable(level));
+        solvable = isMapSolvable(level);
+        if (!solvable) {
+            freeLevel(level);
+        }
+    }
     return level;
 }
 
