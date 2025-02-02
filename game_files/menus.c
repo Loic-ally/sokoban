@@ -33,13 +33,44 @@ void saveScore(Player player)
         strcat(newContent, buffer);
     }
     fclose(file);
+
     if (!playerFound) {
         sprintf(buffer, "Player: %s, Score: %d\n", player.playerName, player.score);
         strcat(newContent, buffer);
     }
+
     file = fopen("scores.txt", "w");
     fputs(newContent, file);
     fclose(file);
+}
+
+void loadScore(Player* player)
+{
+    char name[MAX_NAME_LENGTH];
+    int score;
+    char buffer[256];
+    bool playerFound = false;
+
+    FILE* file = fopen("scores.txt", "r");
+    if (!file) {
+        player->score = 0;
+        return;
+    }
+
+    while (fgets(buffer, sizeof(buffer), file)) {
+        if (sscanf(buffer, "Player: %[^,], Score: %d", name, &score) == 2) {
+            if (strcmp(name, player->playerName) == 0) {
+                player->score = score;
+                playerFound = true;
+                break;
+            }
+        }
+    }
+    fclose(file);
+
+    if (!playerFound) {
+        player->score = 0;
+    }
 }
 
 void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int minBoxes, int maxBoxes)

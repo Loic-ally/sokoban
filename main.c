@@ -28,6 +28,7 @@ int main(void)
     }
     assets = loadAssets();
     askPlayerName(window, font, &player);
+    loadScore(&player);
     player.difficulty = selectDifficulty(window, font);
     switch (player.difficulty) {
         case 1:
@@ -77,6 +78,28 @@ int main(void)
                         movePlayer(level, 1, 0);
                         break;
                     case sfKeyR:
+                        switch (player.difficulty) {
+                            case 1:
+                                minBoxes = 1;
+                                maxBoxes = 5;
+                                break;
+                            case 2:
+                                minBoxes = 5;
+                                maxBoxes = 10;
+                                break;
+                            case 3:
+                                minBoxes = 10;
+                                maxBoxes = 15;
+                                break;
+                            case 4:
+                                minBoxes = 15;
+                                maxBoxes = 20;
+                                break;
+                            default:
+                                minBoxes = 1;
+                                maxBoxes = 5;
+                                break;
+                        }
                         freeLevel(level);
                         level = generateLevel(minBoxes, maxBoxes);
                         break;
@@ -110,6 +133,7 @@ int main(void)
                 }
                 if (checkWin(level)) {
                     player.score += 100;
+                    saveScore(player);
                     displayMenu(window, font, &player, &level, minBoxes, maxBoxes);
                 }
             }

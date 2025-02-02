@@ -67,5 +67,6 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
 void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level **level, int minboxes, int maxboxes);
 void saveScore(Player player);
 int getNumBoxesForDifficulty(int difficulty);
+void loadScore(Player* player);
 
 #endif /* SOKOBAN_H */
