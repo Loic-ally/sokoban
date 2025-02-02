@@ -52,7 +52,7 @@ typedef struct {
 } Player;
 
 int selectDifficulty(sfRenderWindow* window, sfFont* font);
-Assets loadAssets();
+Assets loadAssets(int difficulty);
 void freeAssets(Assets assets);
 void freeLevel(Level* level);
 bool checkWin(Level* level);
@@ -64,7 +64,7 @@ bool canReachTarget(Level* level, Position box, Position target);
 Position getRandomEmptyPosition(Level* level);
 bool isValid(int x, int y);
 void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level **level, int minboxes, int maxboxes);
+void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level **level, int minboxes, int maxboxes, Assets* assets);
 void saveScore(Player player);
 int getNumBoxesForDifficulty(int difficulty);
 void loadScore(Player* player);

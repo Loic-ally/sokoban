@@ -81,7 +81,6 @@ Level* generateLevel(int minBoxes, int maxBoxes)
         level->numBoxes = minBoxes + rand() % (maxBoxes - minBoxes + 1);
         level->boxes = (Position*)malloc(level->numBoxes * sizeof(Position));
         level->targets = (Position*)malloc(level->numBoxes * sizeof(Position));
-
         for (int y = 0; y < MAX_HEIGHT; y++) {
             for (int x = 0; x < MAX_WIDTH; x++) {
                 if (x == 0 || x == MAX_WIDTH - 1 || y == 0 || y == MAX_HEIGHT - 1)
@@ -92,28 +91,26 @@ Level* generateLevel(int minBoxes, int maxBoxes)
         }
         for (int y = 1; y < MAX_HEIGHT - 1; y++) {
             for (int x = 1; x < MAX_WIDTH - 1; x++) {
-                if (rand() % 100 < 30) {
+                if (rand() % 100 < 30)
                     level->grid[y][x] = '#';
-                }
             }
         }
         level->player = getRandomEmptyPosition(level);
         level->grid[level->player.y][level->player.x] = 'P';
         for (int i = 0; i < level->numBoxes; i++) {
-            do {
+            do
                 level->boxes[i] = getRandomEmptyPosition(level);
-            } while (level->grid[level->boxes[i].y][level->boxes[i].x] == 'T');
+            while (level->grid[level->boxes[i].y][level->boxes[i].x] == 'T');
             level->grid[level->boxes[i].y][level->boxes[i].x] = 'B';
 
-            do {
+            do
                 level->targets[i] = getRandomEmptyPosition(level);
-            } while (level->grid[level->targets[i].y][level->targets[i].x] == 'B');
+            while (level->grid[level->targets[i].y][level->targets[i].x] == 'B');
             level->grid[level->targets[i].y][level->targets[i].x] = 'T';
         }
         solvable = isMapSolvable(level);
-        if (!solvable) {
+        if (!solvable)
             freeLevel(level);
-        }
     }
     return level;
 }
@@ -128,10 +125,8 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets)
     for (int y = 0; y < MAX_HEIGHT; y++) {
         for (int x = 0; x < MAX_WIDTH; x++) {
             pos = (sfVector2f){x * TILE_SIZE + offsetX, y * TILE_SIZE + offsetY};
-            
             sfSprite_setPosition(assets.floorSprite, pos);
             sfRenderWindow_drawSprite(window, assets.floorSprite, NULL);
-            
             switch (level->grid[y][x]) {
                 case '#':
                     sfSprite_setPosition(assets.wallSprite, pos);
@@ -148,7 +143,6 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets)
             }
         }
     }
-
     playerPos = (sfVector2f){level->player.x * TILE_SIZE + offsetX, level->player.y * TILE_SIZE + offsetY};
     sfSprite_setPosition(assets.playerSprite, playerPos);
     sfRenderWindow_drawSprite(window, assets.playerSprite, NULL);
@@ -173,19 +167,15 @@ bool movePlayer(Level* level, int dx, int dy)
             break;
         }
     }
-
     if (isBox) {
         pushX = newX + dx;
         pushY = newY + dy;
-
         if (!isValid(pushX, pushY) || level->grid[pushY][pushX] == '#')
             return false;
-
         for (int i = 0; i < level->numBoxes; i++) {
             if (level->boxes[i].x == pushX && level->boxes[i].y == pushY)
                 return false;
         }
-
         isOnTarget = false;
         for (int i = 0; i < level->numBoxes; i++) {
             if (level->targets[i].x == pushX && level->targets[i].y == pushY) {
@@ -193,27 +183,21 @@ bool movePlayer(Level* level, int dx, int dy)
                 break;
             }
         }
-        
         level->grid[level->boxes[boxIndex].y][level->boxes[boxIndex].x] = ' ';
         level->boxes[boxIndex].x = pushX;
         level->boxes[boxIndex].y = pushY;
-
         if (isOnTarget) {
             level->grid[pushY][pushX] = ' ';
-            for (int i = boxIndex; i < level->numBoxes - 1; i++) {
+            for (int i = boxIndex; i < level->numBoxes - 1; i++)
                 level->boxes[i] = level->boxes[i + 1];
-            }
             level->numBoxes--;
-        } else {
+        } else
             level->grid[pushY][pushX] = 'B';
-        }
     }
-
     level->grid[level->player.y][level->player.x] = ' ';
     level->player.x = newX;
     level->player.y = newY;
     level->grid[newY][newX] = 'P';
-    
     return true;
 }
 
@@ -238,23 +222,31 @@ bool checkWin(Level* level)
             return false;
         }
     }
-
     free(targetUsed);
     return true;
 }
 
 void freeLevel(Level* level)
 {
-    free(level->boxes);
-    free(level->targets);
-    free(level);
+    if (level) {
+        if (level->boxes)
+            free(level->boxes);
+        if (level->targets)
+            free(level->targets);
+        free(level);
+    }
 }
 
 void freeAssets(Assets assets)
 {
-    sfSprite_destroy(assets.playerSprite);
-    sfSprite_destroy(assets.wallSprite);
-    sfSprite_destroy(assets.boxSprite);
-    sfSprite_destroy(assets.targetSprite);
-    sfSprite_destroy(assets.floorSprite);
+    if (assets.playerSprite)
+        sfSprite_destroy(assets.playerSprite);
+    if (assets.wallSprite)
+        sfSprite_destroy(assets.wallSprite);
+    if (assets.boxSprite)
+        sfSprite_destroy(assets.boxSprite);
+    if (assets.targetSprite)
+        sfSprite_destroy(assets.targetSprite);
+    if (assets.floorSprite)
+        sfSprite_destroy(assets.floorSprite);
 }

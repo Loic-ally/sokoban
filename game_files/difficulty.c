@@ -32,55 +32,46 @@ int selectDifficulty(sfRenderWindow* window, sfFont* font)
     sfText_setColor(promptText, sfBlack);
     sfText_setString(promptText, "Select Difficulty:\n1. Easy\n2. Normal\n3. Hard\n4. Hell");
     sfText_setPosition(promptText, (sfVector2f){WINDOW_WIDTH / 4, WINDOW_HEIGHT / 4});
-
     button1 = sfRectangleShape_create();
     sfRectangleShape_setSize(button1, (sfVector2f){100, 40});
     sfRectangleShape_setFillColor(button1, sfGreen);
     sfRectangleShape_setPosition(button1, (sfVector2f){WINDOW_WIDTH / 4, WINDOW_HEIGHT / 4 + 100});
-
     buttonText1 = sfText_create();
     sfText_setFont(buttonText1, font);
     sfText_setCharacterSize(buttonText1, 24);
     sfText_setColor(buttonText1, sfBlack);
     sfText_setString(buttonText1, "Easy");
     sfText_setPosition(buttonText1, (sfVector2f){WINDOW_WIDTH / 4 + 25, WINDOW_HEIGHT / 4 + 105});
-
     button2 = sfRectangleShape_create();
     sfRectangleShape_setSize(button2, (sfVector2f){100, 40});
     sfRectangleShape_setFillColor(button2, sfGreen);
     sfRectangleShape_setPosition(button2, (sfVector2f){WINDOW_WIDTH / 4 + 120, WINDOW_HEIGHT / 4 + 100});
-
     buttonText2 = sfText_create();
     sfText_setFont(buttonText2, font);
     sfText_setCharacterSize(buttonText2, 24);
     sfText_setColor(buttonText2, sfBlack);
     sfText_setString(buttonText2, "Normal");
     sfText_setPosition(buttonText2, (sfVector2f){WINDOW_WIDTH / 4 + 125, WINDOW_HEIGHT / 4 + 105});
-
     button3 = sfRectangleShape_create();
     sfRectangleShape_setSize(button3, (sfVector2f){100, 40});
     sfRectangleShape_setFillColor(button3, sfGreen);
     sfRectangleShape_setPosition(button3, (sfVector2f){WINDOW_WIDTH / 4 + 240, WINDOW_HEIGHT / 4 + 100});
-
     buttonText3 = sfText_create();
     sfText_setFont(buttonText3, font);
     sfText_setCharacterSize(buttonText3, 24);
     sfText_setColor(buttonText3, sfBlack);
     sfText_setString(buttonText3, "Hard");
     sfText_setPosition(buttonText3, (sfVector2f){WINDOW_WIDTH / 4 + 260, WINDOW_HEIGHT / 4 + 105});
-
     button4 = sfRectangleShape_create();
     sfRectangleShape_setSize(button4, (sfVector2f){100, 40});
     sfRectangleShape_setFillColor(button4, sfGreen);
     sfRectangleShape_setPosition(button4, (sfVector2f){WINDOW_WIDTH / 4 + 360, WINDOW_HEIGHT / 4 + 100});
-
     buttonText4 = sfText_create();
     sfText_setFont(buttonText4, font);
     sfText_setCharacterSize(buttonText4, 24);
     sfText_setColor(buttonText4, sfBlack);
     sfText_setString(buttonText4, "Hell");
     sfText_setPosition(buttonText4, (sfVector2f){WINDOW_WIDTH / 4 + 385, WINDOW_HEIGHT / 4 + 105});
-
     while (!difficultySelected) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
