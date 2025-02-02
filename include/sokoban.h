@@ -48,8 +48,24 @@ typedef struct {
 typedef struct {
     char playerName[MAX_NAME_LENGTH];
     int score;
+    int difficulty;
 } Player;
 
 int selectDifficulty(sfRenderWindow* window, sfFont* font);
+Assets loadAssets();
+void freeAssets(Assets assets);
+void freeLevel(Level* level);
+bool checkWin(Level* level);
+bool movePlayer(Level* level, int dx, int dy);
+void renderLevel(sfRenderWindow* window, Level* level, Assets assets);
+Level* generateLevel(int minBoxes, int maxBoxes);
+bool isMapSolvable(Level* level);
+bool canReachTarget(Level* level, Position box, Position target);
+Position getRandomEmptyPosition(Level* level);
+bool isValid(int x, int y);
+void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
+void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level **level);
+void saveScore(Player player);
+int getNumBoxesForDifficulty(int difficulty);
 
 #endif /* SOKOBAN_H */
