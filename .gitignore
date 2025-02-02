@@ -2,3 +2,5 @@ sokoban
 *.o
 *.out
 *.txt
+.Ds_Store
+.vscode
