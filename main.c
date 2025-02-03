@@ -16,6 +16,7 @@ int main(void)
     Level* level;
     int minBoxes;
     int maxBoxes;
+    int numPokemons;
     Player player = {"", 0, 1};
     Assets assets;
     sfFont* font = sfFont_createFromFile("assets/font.ttf");
@@ -34,25 +35,30 @@ int main(void)
         case 1:
             minBoxes = 1;
             maxBoxes = 5;
+            numPokemons = 4;
             break;
         case 2:
             minBoxes = 5;
             maxBoxes = 10;
+            numPokemons = 5;
             break;
         case 3:
             minBoxes = 10;
             maxBoxes = 15;
+            numPokemons = 4;
             break;
         case 4:
             minBoxes = 15;
             maxBoxes = 20;
+            numPokemons = 3;
             break;
         default:
             minBoxes = 1;
             maxBoxes = 5;
+            numPokemons = 4;
             break;
     }
-    level = generateLevel(minBoxes, maxBoxes);
+    level = generateLevel(minBoxes, maxBoxes, numPokemons);
     while (sfRenderWindow_isOpen(window)) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -79,32 +85,10 @@ int main(void)
                         break;
                     case sfKeyR:
                         freeLevel(level);
-                        level = generateLevel(minBoxes, maxBoxes);
+                        level = generateLevel(minBoxes, maxBoxes, numPokemons);
                         break;
                     case sfKeyEscape:
-                        displayMenu(window, font, &player, &level, minBoxes, maxBoxes, &assets);
-                        switch (player.difficulty) {
-                            case 1:
-                                minBoxes = 1;
-                                maxBoxes = 5;
-                                break;
-                            case 2:
-                                minBoxes = 5;
-                                maxBoxes = 10;
-                                break;
-                            case 3:
-                                minBoxes = 10;
-                                maxBoxes = 15;
-                                break;
-                            case 4:
-                                minBoxes = 15;
-                                maxBoxes = 20;
-                                break;
-                            default:
-                                minBoxes = 1;
-                                maxBoxes = 5;
-                                break;
-                        }
+                        displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons);
                         break;
                     case sfKeyQ:
                         sfRenderWindow_close(window);
@@ -115,12 +99,12 @@ int main(void)
                 if (checkWin(level)) {
                     player.score += 100;
                     saveScore(player);
-                    displayMenu(window, font, &player, &level, minBoxes, maxBoxes, &assets);
+                    displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons);
                 }
             }
         }
         sfRenderWindow_clear(window, sfBlack);
-        renderLevel(window, level, assets);
+        renderLevel(window, level, assets, numPokemons);
         sfRenderWindow_display(window);
     }
     freeLevel(level);

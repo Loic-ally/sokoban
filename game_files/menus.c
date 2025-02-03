@@ -67,7 +67,7 @@ void loadScore(Player* player)
         player->score = 0;
 }
 
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int minBoxes, int maxBoxes, Assets* assets)
+void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons)
 {
     sfVector2f mousePos;
     sfText* promptText = sfText_create();
@@ -130,38 +130,42 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
                     button3Bounds = sfRectangleShape_getGlobalBounds(button3);
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
                         freeLevel(*level);
-                        *level = generateLevel(minBoxes, maxBoxes);
+                        *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
                         newDifficulty = selectDifficulty(window, font);
                         player->difficulty = newDifficulty;
                         switch (player->difficulty) {
                             case 1:
-                                minBoxes = 1;
-                                maxBoxes = 5;
+                                *minBoxes = 1;
+                                *maxBoxes = 5;
+                                *numPokemons = 4;
                                 break;
                             case 2:
-                                minBoxes = 6;
-                                maxBoxes = 10;
+                                *minBoxes = 5;
+                                *maxBoxes = 10;
+                                *numPokemons = 5;
                                 break;
                             case 3:
-                                minBoxes = 11;
-                                maxBoxes = 15;
+                                *minBoxes = 10;
+                                *maxBoxes = 15;
+                                *numPokemons = 4;
                                 break;
                             case 4:
-                                minBoxes = 16;
-                                maxBoxes = 20;
+                                *minBoxes = 15;
+                                *maxBoxes = 20;
+                                *numPokemons = 3;
                                 break;
                             default:
-                                minBoxes = 1;
-                                maxBoxes = 5;
+                                *minBoxes = 1;
+                                *maxBoxes = 5;
+                                *numPokemons = 4;
                                 break;
                         }
                         freeLevel(*level);
-                        *level = generateLevel(minBoxes, maxBoxes);
-                        newAssets = loadAssets(player->difficulty);
+                        *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
                         freeAssets(*assets);
-                        *assets = newAssets;
+                        *assets = loadAssets(player->difficulty);
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
                         sfRenderWindow_close(window);

@@ -35,6 +35,7 @@ typedef struct {
     Position player;
     Position* boxes;
     Position* targets;
+    Position* pokemons;
     int numBoxes;
 } Level;
 
@@ -45,6 +46,8 @@ typedef struct {
     sfSprite* targetSprite;
     sfSprite* floorSprite;
     sfSprite* wallSprite;
+    sfSprite* pokemonSprites[6];
+    sfTexture* pokemonTextures[6];
 } Assets;
 
 typedef struct {
@@ -59,14 +62,15 @@ void freeAssets(Assets assets);
 void freeLevel(Level* level);
 bool checkWin(Level* level);
 bool movePlayer(Level* level, int dx, int dy);
-void renderLevel(sfRenderWindow* window, Level* level, Assets assets);
-Level* generateLevel(int minBoxes, int maxBoxes);
+void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons);
+Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);
 Position getRandomEmptyPosition(Level* level);
+Position getRandomEmptyPositionForPokemon(void);
 bool isValid(int x, int y);
 void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level **level, int minboxes, int maxboxes, Assets* assets);
+void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons);
 void saveScore(Player player);
 int getNumBoxesForDifficulty(int difficulty);
 void loadScore(Player* player);
