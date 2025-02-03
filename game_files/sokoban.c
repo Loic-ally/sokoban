@@ -81,13 +81,17 @@ Level* generateLevel(int minBoxes, int maxBoxes)
         level->numBoxes = minBoxes + rand() % (maxBoxes - minBoxes + 1);
         level->boxes = (Position*)malloc(level->numBoxes * sizeof(Position));
         level->targets = (Position*)malloc(level->numBoxes * sizeof(Position));
-        for (int y = 0; y < MAX_HEIGHT; y++) {
-            for (int x = 0; x < MAX_WIDTH; x++) {
+        for (int y = 0; y < MAX_HEIGHT + 1; y++) {
+            for (int x = 0; x < MAX_WIDTH + 1; x++) {
                 if (x == 0 || x == MAX_WIDTH - 1 || y == 0 || y == MAX_HEIGHT - 1)
                     level->grid[y][x] = '#';
                 else
                     level->grid[y][x] = ' ';
+                if (x == MAX_WIDTH)
+                    level->grid[y][x] = '\0';
             }
+            if (y == MAX_HEIGHT)
+                level->grid[y][0] = '\0';
         }
         for (int y = 1; y < MAX_HEIGHT - 1; y++) {
             for (int x = 1; x < MAX_WIDTH - 1; x++) {
@@ -122,23 +126,36 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets)
     sfVector2f playerPos;
     sfVector2f pos;
 
+    sfSprite_setPosition(assets.backgroundSprite, (sfVector2f){0, 0});
+    sfRenderWindow_drawSprite(window, assets.backgroundSprite, NULL);
+
     for (int y = 0; y < MAX_HEIGHT; y++) {
         for (int x = 0; x < MAX_WIDTH; x++) {
             pos = (sfVector2f){x * TILE_SIZE + offsetX, y * TILE_SIZE + offsetY};
-            sfSprite_setPosition(assets.floorSprite, pos);
-            sfRenderWindow_drawSprite(window, assets.floorSprite, NULL);
             switch (level->grid[y][x]) {
-                case '#':
-                    sfSprite_setPosition(assets.wallSprite, pos);
-                    sfRenderWindow_drawSprite(window, assets.wallSprite, NULL);
-                    break;
                 case 'B':
+                    sfSprite_setPosition(assets.floorSprite, pos);
+                    sfRenderWindow_drawSprite(window, assets.floorSprite, NULL);
                     sfSprite_setPosition(assets.boxSprite, pos);
                     sfRenderWindow_drawSprite(window, assets.boxSprite, NULL);
                     break;
                 case 'T':
+                    sfSprite_setPosition(assets.floorSprite, pos);
+                    sfRenderWindow_drawSprite(window, assets.floorSprite, NULL);
                     sfSprite_setPosition(assets.targetSprite, pos);
                     sfRenderWindow_drawSprite(window, assets.targetSprite, NULL);
+                    break;
+                case '#':
+                    sfSprite_setPosition(assets.wallSprite, pos);
+                    sfRenderWindow_drawSprite(window, assets.wallSprite, NULL);
+                    break;
+                case ' ':
+                    sfSprite_setPosition(assets.floorSprite, pos);
+                    sfRenderWindow_drawSprite(window, assets.floorSprite, NULL);
+                    break;
+                case 'P':
+                    sfSprite_setPosition(assets.floorSprite, pos);
+                    sfRenderWindow_drawSprite(window, assets.floorSprite, NULL);
                     break;
             }
         }
@@ -157,7 +174,7 @@ bool movePlayer(Level* level, int dx, int dy)
     bool isBox = false;
     int boxIndex = -1;
     bool isOnTarget = false;
-    
+
     if (!isValid(newX, newY) || level->grid[newY][newX] == '#' || level->grid[newY][newX] == 'T')
         return false;
     for (int i = 0; i < level->numBoxes; i++) {
@@ -170,29 +187,23 @@ bool movePlayer(Level* level, int dx, int dy)
     if (isBox) {
         pushX = newX + dx;
         pushY = newY + dy;
-        if (!isValid(pushX, pushY) || level->grid[pushY][pushX] == '#')
+        if (!isValid(pushX, pushY) || level->grid[pushY][pushX] == '#' || level->grid[pushY][pushX] == 'B')
             return false;
-        for (int i = 0; i < level->numBoxes; i++) {
-            if (level->boxes[i].x == pushX && level->boxes[i].y == pushY)
-                return false;
-        }
-        isOnTarget = false;
-        for (int i = 0; i < level->numBoxes; i++) {
-            if (level->targets[i].x == pushX && level->targets[i].y == pushY) {
-                isOnTarget = true;
-                break;
-            }
-        }
+
+        isOnTarget = (level->grid[pushY][pushX] == 'T');
+
         level->grid[level->boxes[boxIndex].y][level->boxes[boxIndex].x] = ' ';
         level->boxes[boxIndex].x = pushX;
         level->boxes[boxIndex].y = pushY;
+
         if (isOnTarget) {
             level->grid[pushY][pushX] = ' ';
             for (int i = boxIndex; i < level->numBoxes - 1; i++)
                 level->boxes[i] = level->boxes[i + 1];
             level->numBoxes--;
-        } else
+        } else {
             level->grid[pushY][pushX] = 'B';
+        }
     }
     level->grid[level->player.y][level->player.x] = ' ';
     level->player.x = newX;
@@ -241,12 +252,14 @@ void freeAssets(Assets assets)
 {
     if (assets.playerSprite)
         sfSprite_destroy(assets.playerSprite);
-    if (assets.wallSprite)
-        sfSprite_destroy(assets.wallSprite);
+    if (assets.backgroundSprite)
+        sfSprite_destroy(assets.backgroundSprite);
     if (assets.boxSprite)
         sfSprite_destroy(assets.boxSprite);
     if (assets.targetSprite)
         sfSprite_destroy(assets.targetSprite);
     if (assets.floorSprite)
         sfSprite_destroy(assets.floorSprite);
+    if (assets.wallSprite)
+        sfSprite_destroy(assets.wallSprite);
 }

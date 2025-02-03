@@ -106,6 +106,9 @@ int main(void)
                                 break;
                         }
                         break;
+                    case sfKeyQ:
+                        sfRenderWindow_close(window);
+                        break;
                     default:
                         break;
                 }

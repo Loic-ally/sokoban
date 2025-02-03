@@ -13,9 +13,10 @@
     #include <time.h>
     #include <stdio.h>
     #include <string.h>
+    #include <stddef.h>
 
-    #define WINDOW_WIDTH 900
-    #define WINDOW_HEIGHT 900
+    #define WINDOW_WIDTH 1920
+    #define WINDOW_HEIGHT 1080
     #define TILE_SIZE 50
     #define SPRITE_SIZE 50
     #define MAX_WIDTH 18
@@ -30,7 +31,7 @@ typedef struct {
 } Position;
 
 typedef struct {
-    char grid[MAX_HEIGHT][MAX_WIDTH];
+    char grid[MAX_HEIGHT + 1][MAX_WIDTH + 1];
     Position player;
     Position* boxes;
     Position* targets;
@@ -39,10 +40,11 @@ typedef struct {
 
 typedef struct {
     sfSprite* playerSprite;
-    sfSprite* wallSprite;
+    sfSprite* backgroundSprite;
     sfSprite* boxSprite;
     sfSprite* targetSprite;
     sfSprite* floorSprite;
+    sfSprite* wallSprite;
 } Assets;
 
 typedef struct {
