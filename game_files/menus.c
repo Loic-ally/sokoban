@@ -148,6 +148,7 @@ int displayGameMenu(sfRenderWindow *window, Assets *assets)
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
                 menuOpen = false;
+                returned = -1;
             }
             if (event.type == sfEvtMouseButtonPressed) {
                 if (event.mouseButton.button == sfMouseLeft) {
