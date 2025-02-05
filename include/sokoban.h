@@ -23,7 +23,7 @@
     #define MAX_HEIGHT 18
     #define MIN_BOXES 2
     #define MAX_BOXES 10
-    #define MAX_NAME_LENGTH 50
+    #define MAX_NAME_LENGTH 10
     #define MAX_STATES 1000000
 
 typedef struct {
@@ -59,7 +59,7 @@ typedef struct {
 } Player;
 
 int selectDifficulty(sfRenderWindow* window, sfFont* font);
-Assets loadAssets(int difficulty);
+Assets loadAssets(int difficulty, sfRenderWindow* window);
 void freeAssets(Assets assets);
 void freeLevel(Level* level);
 bool checkWin(Level* level);
@@ -76,5 +76,7 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
 void saveScore(Player player);
 int getNumBoxesForDifficulty(int difficulty);
 void loadScore(Player* player);
+int displayGameMenu(sfRenderWindow *window, Assets *assets);
+sfTexture* customCharacter(sfRenderWindow* window, Assets assets);
 
 #endif /* SOKOBAN_H */

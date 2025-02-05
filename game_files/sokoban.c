@@ -105,18 +105,27 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
 
     while (!solvable) {
         level = (Level*)malloc(sizeof(Level));
+        if (!level) {
+            printf("Failed to allocate memory for level\n");
+            return NULL;
+        }
         level->numBoxes = minBoxes + rand() % (maxBoxes - minBoxes + 1);
         level->boxes = (Position*)malloc(level->numBoxes * sizeof(Position));
         level->targets = (Position*)malloc(level->numBoxes * sizeof(Position));
         level->pokemons = (Position*)malloc(numPokemons * sizeof(Position));
+        if (!level->boxes || !level->targets || !level->pokemons) {
+            printf("Failed to allocate memory for level components\n");
+            freeLevel(level);
+            return NULL;
+        }
         for (int y = 0; y < MAX_HEIGHT + 1; y++) {
             for (int x = 0; x < MAX_WIDTH + 1; x++) {
                 if (x == 0 || x == MAX_WIDTH - 1 || y == 0 || y == MAX_HEIGHT - 1) {
                     level->grid[y][x] = '#';
-                    level->wallSpriteIndices[y][x] = rand() % 9; // Randomly select a wall sprite index
+                    level->wallSpriteIndices[y][x] = rand() % 9;
                 } else {
                     level->grid[y][x] = ' ';
-                    level->wallSpriteIndices[y][x] = -1; // No wall sprite for non-wall tiles
+                    level->wallSpriteIndices[y][x] = -1;
                 }
                 if (x == MAX_WIDTH)
                     level->grid[y][x] = '\0';
@@ -128,7 +137,7 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
             for (int x = 1; x < MAX_WIDTH - 1; x++) {
                 if (rand() % 100 < 30) {
                     level->grid[y][x] = '#';
-                    level->wallSpriteIndices[y][x] = rand() % 9; // Randomly select a wall sprite index
+                    level->wallSpriteIndices[y][x] = rand() % 9;
                 }
             }
         }

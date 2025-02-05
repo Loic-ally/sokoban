@@ -7,11 +7,11 @@
 
 #include "../include/sokoban.h"
 
-Assets loadAssets(int difficulty)
+Assets loadAssets(int difficulty, sfRenderWindow* window)
 {
     Assets assets;
     float scale = (float)TILE_SIZE / SPRITE_SIZE;
-    sfTexture* playerTexture = sfTexture_createFromFile("assets/player.png", NULL);
+    sfTexture* playerTexture = customCharacter(window, assets);
     sfTexture* boxTexture;
     sfTexture* targetTexture;
     sfTexture* floorTexture;
@@ -19,13 +19,14 @@ Assets loadAssets(int difficulty)
     sfTexture* backgroundTexture;
     sfTexture* pokemonTextures[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
     sfVector2f spriteScale = {scale, scale};
+    sfIntRect rect = {0, 0, 50, 50};
 
-    assets.playerSprite = sfSprite_create();
     assets.backgroundSprite = sfSprite_create();
     assets.boxSprite = sfSprite_create();
     assets.targetSprite = sfSprite_create();
     assets.floorSprite = sfSprite_create();
     assets.wallSprite = sfSprite_create();
+    assets.playerSprite = sfSprite_create();
 
     switch (difficulty) {
         case 1:
@@ -73,15 +74,15 @@ Assets loadAssets(int difficulty)
             wallTexture = sfTexture_createFromFile("assets/decorations/hell/walls_hell.png", NULL);
             break;
         default:
-            boxTexture = sfTexture_createFromFile("assets/box.png", NULL);
-            targetTexture = sfTexture_createFromFile("assets/storage.png", NULL);
-            floorTexture = sfTexture_createFromFile("assets/floor.png", NULL);
+            boxTexture = sfTexture_createFromFile("assets/decorations/easy/box.png", NULL);
+            targetTexture = sfTexture_createFromFile("assets/decorations/easy/stockage.png", NULL);
+            floorTexture = sfTexture_createFromFile("assets/decorations/easy/floor.png", NULL);
             backgroundTexture = sfTexture_createFromFile("assets/decorations/easy/background.png", NULL);
             pokemonTextures[0] = sfTexture_createFromFile("assets/decorations/easy/pokemon0.png", NULL);
             pokemonTextures[1] = sfTexture_createFromFile("assets/decorations/easy/pokemon1.png", NULL);
             pokemonTextures[2] = sfTexture_createFromFile("assets/decorations/easy/pokemon2.png", NULL);
             pokemonTextures[3] = sfTexture_createFromFile("assets/decorations/easy/pokemon3.png", NULL);
-            wallTexture = sfTexture_createFromFile("assets/decorations/hell/walls_hell.png", NULL);
+            wallTexture = sfTexture_createFromFile("assets/decorations/easy/walls_easy.png", NULL);
             break;
     }
 
@@ -128,13 +129,14 @@ Assets loadAssets(int difficulty)
     }
 
     sfSprite_setTexture(assets.wallSprite, wallTexture, sfTrue);
-    sfSprite_setTexture(assets.playerSprite, playerTexture, sfTrue);
     sfSprite_setTexture(assets.backgroundSprite, backgroundTexture, sfTrue);
     sfSprite_setTexture(assets.boxSprite, boxTexture, sfTrue);
     sfSprite_setTexture(assets.targetSprite, targetTexture, sfTrue);
     sfSprite_setTexture(assets.floorSprite, floorTexture, sfTrue);
+    sfSprite_setTexture(assets.playerSprite, playerTexture, sfTrue);
 
-    sfSprite_setScale(assets.playerSprite, spriteScale);
+    sfSprite_setTextureRect(assets.playerSprite, rect);
+
     sfSprite_setScale(assets.boxSprite, spriteScale);
     sfSprite_setScale(assets.targetSprite, spriteScale);
     sfSprite_setScale(assets.floorSprite, spriteScale);

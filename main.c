@@ -13,13 +13,14 @@ int main(void)
     sfRenderWindow* window = sfRenderWindow_create(mode, "Sokoban", sfResize | sfClose, NULL);
     sfView* view;
     sfEvent event;
-    Level* level;
+    Level* level = NULL;
     int minBoxes;
     int maxBoxes;
     int numPokemons;
     Player player = {"", 0, 1};
-    Assets assets;
+    Assets assets = {0};
     sfFont* font = sfFont_createFromFile("assets/font.ttf");
+    int error;
 
     srand(time(NULL));
     sfRenderWindow_setFramerateLimit(window, 60);
@@ -27,10 +28,14 @@ int main(void)
         printf("Failed to load font\n");
         return -1;
     }
+    error = displayGameMenu(window, &assets);
+    if (error == -1)
+        return 0;
+    
     askPlayerName(window, font, &player);
     loadScore(&player);
     player.difficulty = selectDifficulty(window, font);
-    assets = loadAssets(player.difficulty);
+    assets = loadAssets(player.difficulty, window);
     switch (player.difficulty) {
         case 1:
             minBoxes = 1;

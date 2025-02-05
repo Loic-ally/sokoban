@@ -15,8 +15,10 @@ OBJ = $(SRC:.c=.o)
 
 NAME = sokoban
 
+CFLAGS = -g
+
 all: $(OBJ)
-	gcc -o $(NAME) $(OBJ) -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio
+	gcc -o $(NAME) $(OBJ) -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -fsanitize=address
 
 clean:
 	rm -f $(OBJ)
