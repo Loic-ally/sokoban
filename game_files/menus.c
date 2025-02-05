@@ -319,17 +319,17 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
                                 *numPokemons = 4;
                                 break;
                             case 2:
-                                *minBoxes = 5;
+                                *minBoxes = 6;
                                 *maxBoxes = 10;
                                 *numPokemons = 5;
                                 break;
                             case 3:
-                                *minBoxes = 10;
+                                *minBoxes = 11;
                                 *maxBoxes = 15;
                                 *numPokemons = 4;
                                 break;
                             case 4:
-                                *minBoxes = 15;
+                                *minBoxes = 16;
                                 *maxBoxes = 20;
                                 *numPokemons = 3;
                                 break;
