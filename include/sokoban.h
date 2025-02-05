@@ -8,6 +8,7 @@
 #ifndef SOKOBAN_H
 #define SOKOBAN_H
 
+<<<<<<< HEAD
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdbool.h>
@@ -27,6 +28,18 @@
 #define MAX_BOXES 10
 #define MAX_NAME_LENGTH 11
 #define MAX_STATES 1000000
+=======
+    extern unsigned int WINDOW_WIDTH;
+    extern unsigned int WINDOW_HEIGHT;
+    #define TILE_SIZE 50
+    #define SPRITE_SIZE 50
+    #define MAX_WIDTH 18
+    #define MAX_HEIGHT 18
+    #define MIN_BOXES 2
+    #define MAX_BOXES 10
+    #define MAX_NAME_LENGTH 11
+    #define MAX_STATES 1000000
+>>>>>>> aa076011628ca9e28781f978d94b1cd7c9e6da54
 
 typedef struct {
     int x, y;
