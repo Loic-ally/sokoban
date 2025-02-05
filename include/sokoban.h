@@ -6,25 +6,27 @@
 */
 
 #ifndef SOKOBAN_H
-    #define SOKOBAN_H
-    #include <SFML/Graphics.h>
-    #include <stdbool.h>
-    #include <stdlib.h>
-    #include <time.h>
-    #include <stdio.h>
-    #include <string.h>
-    #include <stddef.h>
+#define SOKOBAN_H
 
-    #define WINDOW_WIDTH 1920
-    #define WINDOW_HEIGHT 1080
-    #define TILE_SIZE 50
-    #define SPRITE_SIZE 50
-    #define MAX_WIDTH 18
-    #define MAX_HEIGHT 18
-    #define MIN_BOXES 2
-    #define MAX_BOXES 10
-    #define MAX_NAME_LENGTH 11
-    #define MAX_STATES 1000000
+#include <SFML/Graphics.h>
+#include <SFML/Audio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+#include <string.h>
+#include <stddef.h>
+
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
+#define TILE_SIZE 50
+#define SPRITE_SIZE 50
+#define MAX_WIDTH 18
+#define MAX_HEIGHT 18
+#define MIN_BOXES 2
+#define MAX_BOXES 10
+#define MAX_NAME_LENGTH 11
+#define MAX_STATES 1000000
 
 typedef struct {
     int x, y;
@@ -50,6 +52,7 @@ typedef struct {
     sfSprite* pokemonSprites[6];
     sfTexture* pokemonTextures[6];
     sfTexture* wallTexture;
+    sfMusic* levelMusic;
 } Assets;
 
 typedef struct {
@@ -67,16 +70,12 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
 Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);
-Position getRandomEmptyPosition(Level* level);
-Position getRandomEmptyPositionForPokemon(void);
-bool isValid(int x, int y);
+void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic);
+int displayGameMenu(sfRenderWindow* window, Assets* assets, sfMusic* menuMusic);
 void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
-void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection);
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons);
 void saveScore(Player player);
-int getNumBoxesForDifficulty(int difficulty);
 void loadScore(Player* player);
-int displayGameMenu(sfRenderWindow *window, Assets *assets);
-sfTexture* customCharacter(sfRenderWindow* window, Assets assets);
+void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection);
+sfTexture* customCharacter(sfRenderWindow* window, Assets assets); // Add this line
 
-#endif /* SOKOBAN_H */
+#endif // SOKOBAN_H

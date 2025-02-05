@@ -105,7 +105,7 @@ int settings(sfRenderWindow *window)
     return 0;
 }
 
-int displayGameMenu(sfRenderWindow *window, Assets *assets)
+int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic)
 {
     sfTexture* texture = sfTexture_createFromFile("assets/menu/menu_background.png", NULL);
     sfSprite* sprite_menu = sfSprite_create();
@@ -181,6 +181,7 @@ int displayGameMenu(sfRenderWindow *window, Assets *assets)
     sfTexture_destroy(texture);
     if (returned == -1)
         sfRenderWindow_destroy(window);
+
     return returned;
 }
 
@@ -244,7 +245,7 @@ void loadScore(Player* player)
         player->score = 0;
 }
 
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons)
+void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic)
 {
     sfVector2f mousePos;
     sfText* promptText = sfText_create();
@@ -261,6 +262,10 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
     sfText* buttonText3 = sfText_create();
     int newDifficulty;
     Assets newAssets;
+
+    if (menuMusic) {
+        sfMusic_play(menuMusic);
+    }
 
     sfText_setFont(promptText, font);
     sfText_setCharacterSize(promptText, 24);
@@ -341,8 +346,20 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
                         }
                         freeLevel(*level);
                         *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
+
+                        if (assets->levelMusic) {
+                            sfMusic_stop(assets->levelMusic);
+                            assets->levelMusic = NULL;
+                        }
+
                         freeAssets(*assets);
                         *assets = loadAssets(player->difficulty, window);
+
+                        if (assets->levelMusic) {
+                            sfMusic_setLoop(assets->levelMusic, sfTrue);
+                            sfMusic_play(assets->levelMusic);
+                        }
+
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
                         sfRenderWindow_close(window);

@@ -22,6 +22,8 @@ int main(void)
     sfFont* font = sfFont_createFromFile("assets/font.ttf");
     int error;
     int animationDirection = 0;
+    sfMusic* menuMusic = sfMusic_createFromFile("assets/musics/menu.mp3");
+    sfMusic* levelMusic = NULL;
 
     srand(time(NULL));
     sfRenderWindow_setFramerateLimit(window, 60);
@@ -29,7 +31,11 @@ int main(void)
         printf("Failed to load font\n");
         return -1;
     }
-    error = displayGameMenu(window, &assets);
+    if (menuMusic) {
+        sfMusic_setLoop(menuMusic, sfTrue);
+        sfMusic_play(menuMusic);
+    }
+    error = displayGameMenu(window, &assets, menuMusic);
     if (error == -1)
         return 0;
     
@@ -37,6 +43,16 @@ int main(void)
     loadScore(&player);
     player.difficulty = selectDifficulty(window, font);
     assets = loadAssets(player.difficulty, window);
+
+    if (menuMusic) {
+        sfMusic_stop(menuMusic);
+    }
+    levelMusic = assets.levelMusic;
+    if (levelMusic) {
+        sfMusic_setLoop(levelMusic, sfTrue);
+        sfMusic_play(levelMusic);
+    }
+
     switch (player.difficulty) {
         case 1:
             minBoxes = 1;
@@ -65,6 +81,7 @@ int main(void)
             break;
     }
     level = generateLevel(minBoxes, maxBoxes, numPokemons);
+    
     while (sfRenderWindow_isOpen(window)) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -94,7 +111,7 @@ int main(void)
                         level = generateLevel(minBoxes, maxBoxes, numPokemons);
                         break;
                     case sfKeyEscape:
-                        displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons);
+                        displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, NULL);
                         break;
                     default:
                         break;
@@ -118,7 +135,7 @@ int main(void)
                             break;
                     }
                     saveScore(player);
-                    displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons);
+                    displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, menuMusic);
                 }
             }
         }
@@ -130,5 +147,11 @@ int main(void)
     freeAssets(assets);
     sfFont_destroy(font);
     sfRenderWindow_destroy(window);
+    if (menuMusic) {
+        sfMusic_destroy(menuMusic);
+    }
+    if (levelMusic) {
+        sfMusic_destroy(levelMusic);
+    }
     return 0;
 }
