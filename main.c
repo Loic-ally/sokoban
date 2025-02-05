@@ -77,16 +77,16 @@ int main(void)
             }
             if (event.type == sfEvtKeyPressed) {
                 switch (event.key.code) {
-                    case sfKeyUp:
+                    case sfKeyZ:
                         assets = movePlayer(level, 0, -1, assets, &animationDirection);
                         break;
-                    case sfKeyDown:
+                    case sfKeyS:
                         assets = movePlayer(level, 0, 1, assets, &animationDirection);
                         break;
-                    case sfKeyLeft:
+                    case sfKeyQ:
                         assets = movePlayer(level, -1, 0, assets, &animationDirection);
                         break;
-                    case sfKeyRight:
+                    case sfKeyD:
                         assets = movePlayer(level, 1, 0, assets, &animationDirection);
                         break;
                     case sfKeyR:
@@ -96,14 +96,27 @@ int main(void)
                     case sfKeyEscape:
                         displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons);
                         break;
-                    case sfKeyQ:
-                        sfRenderWindow_close(window);
-                        break;
                     default:
                         break;
                 }
                 if (checkWin(level)) {
-                    player.score += 100;
+                    switch (player.difficulty) {
+                        case 1:
+                            player.score += 100;
+                            break;
+                        case 2:
+                            player.score += 250;
+                            break;
+                        case 3:
+                            player.score += 500;
+                            break;
+                        case 4:
+                            player.score += 1000;
+                            break;
+                        default:
+                            player.score += 100;
+                            break;
+                    }
                     saveScore(player);
                     displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons);
                 }

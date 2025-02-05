@@ -107,7 +107,7 @@ int settings(sfRenderWindow *window)
 
 int displayGameMenu(sfRenderWindow *window, Assets *assets)
 {
-    sfTexture* texture = sfTexture_createFromFile("assets/menu_background.png", NULL);
+    sfTexture* texture = sfTexture_createFromFile("assets/menu/menu_background.png", NULL);
     sfSprite* sprite_menu = sfSprite_create();
     sfRectangleShape* button1 = sfRectangleShape_create();
     sfRectangleShape* button2 = sfRectangleShape_create();
@@ -381,7 +381,7 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
     int nameLength = 0;
     sfVector2f mousePos;
     sfFloatRect buttonBounds;
-    sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu_username.png", NULL);
+    sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu/menu_username.png", NULL);
     sfSprite* backgroundSprite = sfSprite_create();
     sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
 

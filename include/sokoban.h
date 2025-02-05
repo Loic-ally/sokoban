@@ -23,7 +23,7 @@
     #define MAX_HEIGHT 18
     #define MIN_BOXES 2
     #define MAX_BOXES 10
-    #define MAX_NAME_LENGTH 10
+    #define MAX_NAME_LENGTH 11
     #define MAX_STATES 1000000
 
 typedef struct {

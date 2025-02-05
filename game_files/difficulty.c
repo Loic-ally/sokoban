@@ -21,7 +21,7 @@ int selectDifficulty(sfRenderWindow* window, sfFont* font)
     sfFloatRect button2Bounds;
     sfFloatRect button3Bounds;
     sfFloatRect button4Bounds;
-    sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu_difficulty.png", NULL);
+    sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu/menu_difficulty.png", NULL);
     sfSprite* backgroundSprite = sfSprite_create();
 
     sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
