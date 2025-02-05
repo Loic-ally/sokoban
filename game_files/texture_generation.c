@@ -15,7 +15,7 @@ Assets loadAssets(int difficulty)
     sfTexture* boxTexture;
     sfTexture* targetTexture;
     sfTexture* floorTexture;
-    sfTexture* wallTexture = sfTexture_createFromFile("assets/wall.png", NULL);
+    sfTexture* wallTexture;
     sfTexture* backgroundTexture;
     sfTexture* pokemonTextures[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
     sfVector2f spriteScale = {scale, scale};
@@ -37,6 +37,7 @@ Assets loadAssets(int difficulty)
             pokemonTextures[1] = sfTexture_createFromFile("assets/decorations/easy/pokemon1.png", NULL);
             pokemonTextures[2] = sfTexture_createFromFile("assets/decorations/easy/pokemon2.png", NULL);
             pokemonTextures[3] = sfTexture_createFromFile("assets/decorations/easy/pokemon3.png", NULL);
+            wallTexture = sfTexture_createFromFile("assets/decorations/easy/walls_easy.png", NULL);
             break;
         case 2:
             boxTexture = sfTexture_createFromFile("assets/decorations/normal/box.png", NULL);
@@ -48,6 +49,7 @@ Assets loadAssets(int difficulty)
             pokemonTextures[2] = sfTexture_createFromFile("assets/decorations/normal/pokemon2.png", NULL);
             pokemonTextures[3] = sfTexture_createFromFile("assets/decorations/normal/pokemon3.png", NULL);
             pokemonTextures[4] = sfTexture_createFromFile("assets/decorations/normal/pokemon4.png", NULL);
+            wallTexture = sfTexture_createFromFile("assets/decorations/normal/walls_normal.png", NULL);
             break;
         case 3:
             boxTexture = sfTexture_createFromFile("assets/decorations/hard/box.png", NULL);
@@ -58,6 +60,7 @@ Assets loadAssets(int difficulty)
             pokemonTextures[1] = sfTexture_createFromFile("assets/decorations/hard/pokemon1.png", NULL);
             pokemonTextures[2] = sfTexture_createFromFile("assets/decorations/hard/pokemon2.png", NULL);
             pokemonTextures[3] = sfTexture_createFromFile("assets/decorations/hard/pokemon3.png", NULL);
+            wallTexture = sfTexture_createFromFile("assets/decorations/hard/walls_hard.png", NULL);
             break;
         case 4:
             boxTexture = sfTexture_createFromFile("assets/decorations/hell/box.png", NULL);
@@ -67,6 +70,7 @@ Assets loadAssets(int difficulty)
             pokemonTextures[0] = sfTexture_createFromFile("assets/decorations/hell/pokemon0.png", NULL);
             pokemonTextures[1] = sfTexture_createFromFile("assets/decorations/hell/pokemon1.png", NULL);
             pokemonTextures[2] = sfTexture_createFromFile("assets/decorations/hell/pokemon2.png", NULL);
+            wallTexture = sfTexture_createFromFile("assets/decorations/hell/walls_hell.png", NULL);
             break;
         default:
             boxTexture = sfTexture_createFromFile("assets/box.png", NULL);
@@ -77,6 +81,7 @@ Assets loadAssets(int difficulty)
             pokemonTextures[1] = sfTexture_createFromFile("assets/decorations/easy/pokemon1.png", NULL);
             pokemonTextures[2] = sfTexture_createFromFile("assets/decorations/easy/pokemon2.png", NULL);
             pokemonTextures[3] = sfTexture_createFromFile("assets/decorations/easy/pokemon3.png", NULL);
+            wallTexture = sfTexture_createFromFile("assets/decorations/hell/walls_hell.png", NULL);
             break;
     }
 

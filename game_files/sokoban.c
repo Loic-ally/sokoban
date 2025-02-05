@@ -111,10 +111,13 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
         level->pokemons = (Position*)malloc(numPokemons * sizeof(Position));
         for (int y = 0; y < MAX_HEIGHT + 1; y++) {
             for (int x = 0; x < MAX_WIDTH + 1; x++) {
-                if (x == 0 || x == MAX_WIDTH - 1 || y == 0 || y == MAX_HEIGHT - 1)
+                if (x == 0 || x == MAX_WIDTH - 1 || y == 0 || y == MAX_HEIGHT - 1) {
                     level->grid[y][x] = '#';
-                else
+                    level->wallSpriteIndices[y][x] = rand() % 9; // Randomly select a wall sprite index
+                } else {
                     level->grid[y][x] = ' ';
+                    level->wallSpriteIndices[y][x] = -1; // No wall sprite for non-wall tiles
+                }
                 if (x == MAX_WIDTH)
                     level->grid[y][x] = '\0';
             }
@@ -123,8 +126,10 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
         }
         for (int y = 1; y < MAX_HEIGHT - 1; y++) {
             for (int x = 1; x < MAX_WIDTH - 1; x++) {
-                if (rand() % 100 < 30)
+                if (rand() % 100 < 30) {
                     level->grid[y][x] = '#';
+                    level->wallSpriteIndices[y][x] = rand() % 9; // Randomly select a wall sprite index
+                }
             }
         }
         level->player = getRandomEmptyPosition(level);
@@ -139,6 +144,9 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
                 level->targets[i] = getRandomEmptyPosition(level);
             while (level->grid[level->targets[i].y][level->targets[i].x] == 'B');
             level->grid[level->targets[i].y][level->targets[i].x] = 'T';
+        }
+        for (int i = 0; i < numPokemons; i++) {
+            level->pokemons[i] = getRandomEmptyPositionForPokemon();
         }
         solvable = isMapSolvable(level);
         if (!solvable)
@@ -169,6 +177,11 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
                     sfRenderWindow_drawSprite(window, assets.targetSprite, NULL);
                     break;
                 case '#':
+                    sfSprite_setPosition(assets.floorSprite, pos);
+                    sfRenderWindow_drawSprite(window, assets.floorSprite, NULL);
+                    int wallSpriteIndex = level->wallSpriteIndices[y][x];
+                    sfIntRect wallRect = { (wallSpriteIndex % 3) * 50, (wallSpriteIndex / 3) * 50, 50, 50 };
+                    sfSprite_setTextureRect(assets.wallSprite, wallRect);
                     sfSprite_setPosition(assets.wallSprite, pos);
                     sfRenderWindow_drawSprite(window, assets.wallSprite, NULL);
                     break;
@@ -198,7 +211,8 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
     } else
         frameCounter++;
     for (int i = 0; i < numPokemons; i++) {
-        sfIntRect rect = {frame * 96, 0, 96, 96};
+        sfSprite_setScale(assets.pokemonSprites[i], (sfVector2f){2, 2});
+        sfIntRect rect = {frame * 50, 0, 50, 50};
         sfSprite_setTextureRect(assets.pokemonSprites[i], rect);
         sfRenderWindow_drawSprite(window, assets.pokemonSprites[i], NULL);
     }

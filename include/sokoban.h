@@ -37,6 +37,7 @@ typedef struct {
     Position* targets;
     Position* pokemons;
     int numBoxes;
+    int wallSpriteIndices[MAX_HEIGHT][MAX_WIDTH];
 } Level;
 
 typedef struct {
@@ -48,6 +49,7 @@ typedef struct {
     sfSprite* wallSprite;
     sfSprite* pokemonSprites[6];
     sfTexture* pokemonTextures[6];
+    sfTexture* wallTexture;
 } Assets;
 
 typedef struct {
