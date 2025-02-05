@@ -164,7 +164,7 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
     return level;
 }
 
-void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons)
+void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection)
 {
     float offsetX = (WINDOW_WIDTH - MAX_WIDTH * TILE_SIZE) / 2;
     float offsetY = (WINDOW_HEIGHT - MAX_HEIGHT * TILE_SIZE) / 2;
@@ -214,24 +214,28 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
         }
     }
 
-    if (frameCounter >= frameDelay) {
-        frame = (frame + 1) % 4;
-        frameCounter = 0;
-    } else
-        frameCounter++;
-    for (int i = 0; i < numPokemons; i++) {
-        sfSprite_setScale(assets.pokemonSprites[i], (sfVector2f){2, 2});
-        sfIntRect rect = {frame * 50, 0, 50, 50};
-        sfSprite_setTextureRect(assets.pokemonSprites[i], rect);
-        sfRenderWindow_drawSprite(window, assets.pokemonSprites[i], NULL);
-    }
-
+    sfIntRect rect = {0, animationDirection * 50, 50, 50};
+    sfSprite_setTextureRect(assets.playerSprite, rect);
     playerPos = (sfVector2f){level->player.x * TILE_SIZE + offsetX, level->player.y * TILE_SIZE + offsetY};
     sfSprite_setPosition(assets.playerSprite, playerPos);
     sfRenderWindow_drawSprite(window, assets.playerSprite, NULL);
+
+    if (frameCounter >= frameDelay) {
+        frame = (frame + 1) % 4;
+        frameCounter = 0;
+    } else {
+        frameCounter++;
+    }
+
+    for (int i = 0; i < numPokemons; i++) {
+        sfSprite_setScale(assets.pokemonSprites[i], (sfVector2f){2, 2});
+        sfIntRect pokemonRect = {frame * 50, 0, 50, 50};
+        sfSprite_setTextureRect(assets.pokemonSprites[i], pokemonRect);
+        sfRenderWindow_drawSprite(window, assets.pokemonSprites[i], NULL);
+    }
 }
 
-bool movePlayer(Level* level, int dx, int dy)
+Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection)
 {
     int newX = level->player.x + dx;
     int newY = level->player.y + dy;
@@ -242,7 +246,7 @@ bool movePlayer(Level* level, int dx, int dy)
     bool isOnTarget = false;
 
     if (!isValid(newX, newY) || level->grid[newY][newX] == '#' || level->grid[newY][newX] == 'T')
-        return false;
+        return assets;
     for (int i = 0; i < level->numBoxes; i++) {
         if (level->boxes[i].x == newX && level->boxes[i].y == newY) {
             isBox = true;
@@ -254,7 +258,7 @@ bool movePlayer(Level* level, int dx, int dy)
         pushX = newX + dx;
         pushY = newY + dy;
         if (!isValid(pushX, pushY) || level->grid[pushY][pushX] == '#' || level->grid[pushY][pushX] == 'B')
-            return false;
+            return assets;
 
         isOnTarget = (level->grid[pushY][pushX] == 'T');
 
@@ -275,7 +279,18 @@ bool movePlayer(Level* level, int dx, int dy)
     level->player.x = newX;
     level->player.y = newY;
     level->grid[newY][newX] = 'P';
-    return true;
+
+    if (dx == 1) {
+        *animationDirection = 2;
+    } else if (dx == -1) {
+        *animationDirection = 1;
+    } else if (dy == 1) {
+        *animationDirection = 0;
+    } else if (dy == -1) {
+        *animationDirection = 3;
+    }
+
+    return assets;
 }
 
 bool checkWin(Level* level)

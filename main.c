@@ -21,6 +21,7 @@ int main(void)
     Assets assets = {0};
     sfFont* font = sfFont_createFromFile("assets/font.ttf");
     int error;
+    int animationDirection = 0;
 
     srand(time(NULL));
     sfRenderWindow_setFramerateLimit(window, 60);
@@ -77,16 +78,16 @@ int main(void)
             if (event.type == sfEvtKeyPressed) {
                 switch (event.key.code) {
                     case sfKeyUp:
-                        movePlayer(level, 0, -1);
+                        assets = movePlayer(level, 0, -1, assets, &animationDirection);
                         break;
                     case sfKeyDown:
-                        movePlayer(level, 0, 1);
+                        assets = movePlayer(level, 0, 1, assets, &animationDirection);
                         break;
                     case sfKeyLeft:
-                        movePlayer(level, -1, 0);
+                        assets = movePlayer(level, -1, 0, assets, &animationDirection);
                         break;
                     case sfKeyRight:
-                        movePlayer(level, 1, 0);
+                        assets = movePlayer(level, 1, 0, assets, &animationDirection);
                         break;
                     case sfKeyR:
                         freeLevel(level);
@@ -109,7 +110,7 @@ int main(void)
             }
         }
         sfRenderWindow_clear(window, sfBlack);
-        renderLevel(window, level, assets, numPokemons);
+        renderLevel(window, level, assets, numPokemons, animationDirection);
         sfRenderWindow_display(window);
     }
     freeLevel(level);
