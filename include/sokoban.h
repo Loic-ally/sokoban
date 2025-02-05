@@ -17,8 +17,8 @@
 #include <string.h>
 #include <stddef.h>
 
-extern unsigned int WINDOW_WIDTH;
-extern unsigned int WINDOW_HEIGHT;
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
 #define TILE_SIZE 50
 #define SPRITE_SIZE 50
 #define MAX_WIDTH 18

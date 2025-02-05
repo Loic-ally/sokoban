@@ -7,19 +7,8 @@
 
 #include "include/sokoban.h"
 
-unsigned int WINDOW_WIDTH;
-unsigned int WINDOW_HEIGHT;
-
-static void get_screen_size(void)
-{
-    sfVideoMode desktopMode = sfVideoMode_getDesktopMode();
-    WINDOW_WIDTH = desktopMode.width;
-    WINDOW_HEIGHT = desktopMode.height;
-}
-
 int main(void)
 {
-    get_screen_size();
     sfVideoMode mode = {WINDOW_WIDTH, WINDOW_HEIGHT, 32};
     sfRenderWindow* window = sfRenderWindow_create(mode, "Sokoban", sfResize | sfClose, NULL);
     sfView* view;
