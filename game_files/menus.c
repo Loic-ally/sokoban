@@ -75,6 +75,7 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
                 menuOpen = false;
+                return NULL;
             }
             if (event.type == sfEvtMouseButtonPressed) {
                 if (event.mouseButton.button == sfMouseLeft) {
@@ -259,10 +260,6 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
     int newDifficulty;
     Assets newAssets;
 
-    if (menuMusic) {
-        sfMusic_play(menuMusic);
-    }
-
     sfText_setFont(promptText, font);
     sfText_setCharacterSize(promptText, 24);
     sfText_setColor(promptText, sfBlack);
@@ -343,8 +340,9 @@ void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** l
                         freeLevel(*level);
                         *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
 
-                        if (assets->levelMusic) {
+                        if (assets->levelMusic != NULL) {
                             sfMusic_stop(assets->levelMusic);
+                            sfMusic_destroy(assets->levelMusic);
                             assets->levelMusic = NULL;
                         }
 
@@ -419,7 +417,7 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
-                nameEntered = true;
+                exit(0);
             }
             if (event.type == sfEvtTextEntered) {
                 if (event.text.unicode == '\r')

@@ -45,15 +45,13 @@ int main(void)
     player.difficulty = selectDifficulty(window, font);
     assets = loadAssets(player.difficulty, window);
 
-    if (menuMusic) {
+    if (menuMusic)
         sfMusic_stop(menuMusic);
-    }
     levelMusic = assets.levelMusic;
     if (levelMusic) {
         sfMusic_setLoop(levelMusic, sfTrue);
         sfMusic_play(levelMusic);
     }
-
     switch (player.difficulty) {
         case 1:
             minBoxes = 1;
@@ -82,7 +80,6 @@ int main(void)
             break;
     }
     level = generateLevel(minBoxes, maxBoxes, numPokemons);
-    
     while (sfRenderWindow_isOpen(window)) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -150,9 +147,7 @@ int main(void)
     sfRenderWindow_destroy(window);
     if (menuMusic) {
         sfMusic_destroy(menuMusic);
-    }
-    if (levelMusic) {
-        sfMusic_destroy(levelMusic);
+        menuMusic = NULL;
     }
     return 0;
 }

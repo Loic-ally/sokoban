@@ -21,6 +21,9 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
     sfVector2f spriteScale = {scale, scale};
     sfIntRect rect = {0, 0, 50, 50};
 
+    if (playerTexture == NULL) {
+        exit(0);
+    }
     assets.backgroundSprite = sfSprite_create();
     assets.boxSprite = sfSprite_create();
     assets.targetSprite = sfSprite_create();

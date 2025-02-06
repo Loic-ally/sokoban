@@ -62,18 +62,16 @@ typedef struct {
 } Player;
 
 typedef struct {
-    int brightness;         // 0-100
-    bool showGridLines;     // Show/hide grid lines on playing field
-    
+    int brightness;
+    bool showGridLines;
     bool musicEnabled;
-    int musicVolume;       // 0-100
+    int musicVolume;
     bool soundEffectsEnabled;
-    int soundEffectsVolume; // 0-100
-    
+    int soundEffectsVolume;
     bool showMoveCounter;
     bool showTimer;
     bool showFps;
-    bool showPushCounter;   // Count number of box pushes
+    bool showPushCounter;
 } GameSettings;
 
 GameSettings *init_settings(void);

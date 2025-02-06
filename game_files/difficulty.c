@@ -54,6 +54,7 @@ int selectDifficulty(sfRenderWindow* window, sfFont* font)
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
                 difficultySelected = true;
+                exit(0);
             }
             if (event.type == sfEvtMouseButtonPressed) {
                 if (event.mouseButton.button == sfMouseLeft) {

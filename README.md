@@ -37,7 +37,7 @@ To install and run Pokémon Sokoban, follow these steps:
 The objective of the game is to push all the Pokémon-themed boxes onto the storage locations. The player can move up, down, left, and right. However, the player can only push one box at a time and cannot pull boxes.
 
 ### Controls
-* **Arrow Keys**: Move the player up, down, left, or right
+* **Z,S,Q,D**: Move the player up, down, left, or right
 * **R**: Restart the current level
 * **Q**: Quit the game
 
