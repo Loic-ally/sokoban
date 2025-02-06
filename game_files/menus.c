@@ -135,7 +135,7 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
     return NULL;
 }
 
-int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* game_set)
+int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* game_set, sfMusic* levelMusic)
 {
     sfTexture* texture = sfTexture_createFromFile("assets/menu/menu_background.png", NULL);
     sfSprite* sprite_menu = sfSprite_create();
@@ -189,7 +189,7 @@ int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, 
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
-                        settings(window, game_set);
+                        settings(window, game_set, menuMusic, NULL);
                     } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
                         sfRenderWindow_close(window);
                         returned = -1;
@@ -276,7 +276,7 @@ void loadScore(Player* player)
         player->score = 0;
 }
 
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic)
+void displaPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic)
 {
     sfVector2f mousePos;
     sfText* promptText = sfText_create();
