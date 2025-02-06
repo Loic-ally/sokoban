@@ -6,7 +6,7 @@ jobs:
   build-check:
     runs-on: ubuntu-latest
     container:
-      image: docker://ghcr.io/compilers/compiler:latest
+      image: epitechcontent/epitest-docker:latest
 
     steps:
       - uses: actions/checkout@v4
