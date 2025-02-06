@@ -13,7 +13,7 @@ GameSettings *init_settings(void)
 
     settings->showGridLines = false;
     settings->musicEnabled = true;
-    settings->musicVolume = 50;
+    settings->musicVolume = 100;
     settings->soundEffectsEnabled = true;
     settings->soundEffectsVolume = 50;
     settings->showMoveCounter = true;
