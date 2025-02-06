@@ -12,8 +12,8 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
     sfFont* font = sfFont_createFromFile("assets/font.ttf");
     sfTexture* characterTextures[10];
     sfSprite* characterSprites[10];
-    sfRectangleShape* buttons[10];
-    sfText* buttonTexts[10];
+    sfRectangleShape* leftArrows[10];
+    sfRectangleShape* rightArrows[10];
     sfText* titleText = sfText_create();
     sfEvent event;
     sfVector2f mousePos;
@@ -34,7 +34,9 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
     int textureIndex = 0;
     sfFloatRect titleBounds;
     sfIntRect rect = {0, 0, 50, 50};
-    char buttonText[3];
+    sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu/menu_persos.png", NULL);
+    sfSprite* backgroundSprite = sfSprite_create();
+    sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
 
     for (int i = 0; i < 10; i++) {
         characterTextures[i] = sfTexture_createFromFile(characterFiles[i], NULL);
@@ -43,25 +45,45 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
         sfSprite_setTextureRect(characterSprites[i], rect);
         sfSprite_setScale(characterSprites[i], (sfVector2f){4.0f, 4.0f});
 
-        buttons[i] = sfRectangleShape_create();
-        sfRectangleShape_setSize(buttons[i], (sfVector2f){200, 50});
-        sfRectangleShape_setOutlineColor(buttons[i], sfBlack);
-        sfRectangleShape_setOutlineThickness(buttons[i], 2);
-        sfRectangleShape_setFillColor(buttons[i], sfTransparent);
+        leftArrows[i] = sfRectangleShape_create();
+        sfRectangleShape_setSize(leftArrows[i], (sfVector2f){30, 250});
+        sfRectangleShape_setFillColor(leftArrows[i], sfBlack);
 
-        buttonTexts[i] = sfText_create();
-        sfText_setFont(buttonTexts[i], font);
-        sprintf(buttonText, "%d", i + 1);
-        sfText_setString(buttonTexts[i], buttonText);
-        sfText_setCharacterSize(buttonTexts[i], 24);
-        sfText_setColor(buttonTexts[i], sfBlack);
+        rightArrows[i] = sfRectangleShape_create();
+        sfRectangleShape_setSize(rightArrows[i], (sfVector2f){30, 250});
+        sfRectangleShape_setFillColor(rightArrows[i], sfBlack);
     }
+    sfRectangleShape_setPosition(leftArrows[0], (sfVector2f){175, 186});
+    sfRectangleShape_setPosition(rightArrows[0], (sfVector2f){385, 186});
+    sfRectangleShape_setPosition(leftArrows[1], (sfVector2f){505, 186});
+    sfRectangleShape_setPosition(rightArrows[1], (sfVector2f){715, 186});
+    sfRectangleShape_setPosition(leftArrows[2], (sfVector2f){840, 186});
+    sfRectangleShape_setPosition(rightArrows[2], (sfVector2f){1050, 186});
+    sfRectangleShape_setPosition(leftArrows[3], (sfVector2f){1170, 186});
+    sfRectangleShape_setPosition(rightArrows[3], (sfVector2f){1380, 186});
+    sfRectangleShape_setPosition(leftArrows[4], (sfVector2f){1500, 186});
+    sfRectangleShape_setPosition(rightArrows[4], (sfVector2f){1710, 186});
+    sfRectangleShape_setPosition(leftArrows[5], (sfVector2f){175, 624});
+    sfRectangleShape_setPosition(rightArrows[5], (sfVector2f){385, 624});
+    sfRectangleShape_setPosition(leftArrows[6], (sfVector2f){505, 624});
+    sfRectangleShape_setPosition(rightArrows[6], (sfVector2f){715, 624});
+    sfRectangleShape_setPosition(leftArrows[7], (sfVector2f){840, 624});
+    sfRectangleShape_setPosition(rightArrows[7], (sfVector2f){1050, 624});
+    sfRectangleShape_setPosition(leftArrows[8], (sfVector2f){1170, 624});
+    sfRectangleShape_setPosition(rightArrows[8], (sfVector2f){1380, 624});
+    sfRectangleShape_setPosition(leftArrows[9], (sfVector2f){1500, 624});
+    sfRectangleShape_setPosition(rightArrows[9], (sfVector2f){1710, 624});
 
-    for (int i = 0; i < 10; i++) {
-        sfSprite_setPosition(characterSprites[i], (sfVector2f){100 + (i % 5) * 350, 200 + (i / 5) * 400});
-        sfRectangleShape_setPosition(buttons[i], (sfVector2f){100 + (i % 5) * 350, 400 + (i / 5) * 400});
-        sfText_setPosition(buttonTexts[i], (sfVector2f){150 + (i % 5) * 350, 410 + (i / 5) * 400});
-    }
+    sfSprite_setPosition(characterSprites[0], (sfVector2f){195, 220});
+    sfSprite_setPosition(characterSprites[1], (sfVector2f){525, 220});
+    sfSprite_setPosition(characterSprites[2], (sfVector2f){860, 210});
+    sfSprite_setPosition(characterSprites[3], (sfVector2f){1190, 210});
+    sfSprite_setPosition(characterSprites[4], (sfVector2f){1520, 215});
+    sfSprite_setPosition(characterSprites[5], (sfVector2f){195, 640});
+    sfSprite_setPosition(characterSprites[6], (sfVector2f){525, 640});
+    sfSprite_setPosition(characterSprites[7], (sfVector2f){860, 640});
+    sfSprite_setPosition(characterSprites[8], (sfVector2f){1185, 640});
+    sfSprite_setPosition(characterSprites[9], (sfVector2f){1520, 630});
 
     sfText_setFont(titleText, font);
     sfText_setString(titleText, "Choose your Character");
@@ -81,20 +103,32 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
                 if (event.mouseButton.button == sfMouseLeft) {
                     mousePos = (sfVector2f){event.mouseButton.x, event.mouseButton.y};
                     for (int i = 0; i < 10; i++) {
-                        buttonBounds = sfRectangleShape_getGlobalBounds(buttons[i]);
+                        buttonBounds = sfRectangleShape_getGlobalBounds(leftArrows[i]);
                         if (sfFloatRect_contains(&buttonBounds, mousePos.x, mousePos.y)) {
-                            return characterTextures[i];
+                            sfIntRect textureRect = sfSprite_getTextureRect(characterSprites[i]);
+                            textureRect.top = (textureRect.top - 50 + sfTexture_getSize(characterTextures[i]).y) % sfTexture_getSize(characterTextures[i]).y;
+                            sfSprite_setTextureRect(characterSprites[i], textureRect);
                         }
+                        buttonBounds = sfRectangleShape_getGlobalBounds(rightArrows[i]);
+                        if (sfFloatRect_contains(&buttonBounds, mousePos.x, mousePos.y)) {
+                            sfIntRect textureRect = sfSprite_getTextureRect(characterSprites[i]);
+                            textureRect.top = (textureRect.top + 50) % sfTexture_getSize(characterTextures[i]).y;
+                            sfSprite_setTextureRect(characterSprites[i], textureRect);
+                        }
+                        buttonBounds = sfSprite_getGlobalBounds(characterSprites[i]);
+                        if (sfFloatRect_contains(&buttonBounds, mousePos.x, mousePos.y))
+                            return characterTextures[i];
                     }
                 }
             }
         }
         sfRenderWindow_clear(window, sfWhite);
+        sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
         sfRenderWindow_drawText(window, titleText, NULL);
         for (int i = 0; i < 10; i++) {
             sfRenderWindow_drawSprite(window, characterSprites[i], NULL);
-            sfRenderWindow_drawRectangleShape(window, buttons[i], NULL);
-            sfRenderWindow_drawText(window, buttonTexts[i], NULL);
+            sfRenderWindow_drawRectangleShape(window, leftArrows[i], NULL);
+            sfRenderWindow_drawRectangleShape(window, rightArrows[i], NULL);
         }
         sfRenderWindow_display(window);
     }
