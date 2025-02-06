@@ -420,7 +420,7 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
                 exit(0);
             }
             if (event.type == sfEvtTextEntered) {
-                if (event.text.unicode == '\r')
+                if (event.text.unicode == '\r' || event.text.unicode == '\n')
                     nameEntered = true;
                 else if (event.text.unicode == '\b') {
                     if (nameLength > 0)
@@ -431,6 +431,8 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
                 }
                 sfText_setString(nameText, name);
             }
+            if (event.type == sfEvtKeyPressed && event.key.code == sfKeyEnter)
+                nameEntered = true;
             if (event.type == sfEvtMouseButtonPressed) {
                 if (event.mouseButton.button == sfMouseLeft) {
                     mousePos = (sfVector2f){event.mouseButton.x, event.mouseButton.y};

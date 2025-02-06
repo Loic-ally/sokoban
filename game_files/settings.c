@@ -145,6 +145,8 @@ int settings(sfRenderWindow* window, GameSettings* game_set)
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
+                sfRenderWindow_destroy(window);
+                exit(0);
                 isOpen = false;
             }
             if (event.type == sfEvtMouseButtonPressed) {
