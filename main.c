@@ -45,8 +45,9 @@ int main(void)
     player.difficulty = selectDifficulty(window, font);
     assets = loadAssets(player.difficulty, window);
 
-    if (menuMusic)
+    if (menuMusic) {
         sfMusic_stop(menuMusic);
+    }
     levelMusic = assets.levelMusic;
     if (levelMusic) {
         sfMusic_setLoop(levelMusic, sfTrue);
@@ -110,7 +111,7 @@ int main(void)
                         level = generateLevel(minBoxes, maxBoxes, numPokemons);
                         break;
                     case sfKeyEscape:
-                        displaPauseMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, NULL);
+                        displayPauseMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, NULL, settings);
                         break;
                     default:
                         break;
@@ -134,7 +135,7 @@ int main(void)
                             break;
                     }
                     saveScore(player);
-                    displaPauseMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, menuMusic);
+                    displayWinMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, menuMusic);
                 }
             }
         }

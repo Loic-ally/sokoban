@@ -83,14 +83,15 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
 Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);
-void displaPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic);
+void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic, GameSettings *setting);
+void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic);
 int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* settings, sfMusic* levelMusic);
 void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
 void saveScore(Player player);
 void loadScore(Player* player);
 int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic);
 void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection);
-sfTexture* customCharacter(sfRenderWindow* window, Assets assets); // Add this line
+sfTexture* customCharacter(sfRenderWindow* window, Assets assets);
 void apply_sound_settings(GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic);
 
 

@@ -127,12 +127,16 @@ void apply_brightness(sfRenderWindow* window, float brightness) {
 void apply_sound_settings(GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic)
 {
     if (game_set->musicEnabled) {
-        sfMusic_setVolume(menuMusic, game_set->musicVolume);
+        if (menuMusic) {
+            sfMusic_setVolume(menuMusic, game_set->musicVolume);
+        }
         if (levelMusic) {
             sfMusic_setVolume(levelMusic, game_set->musicVolume);
         }
     } else {
-        sfMusic_setVolume(menuMusic, 0);
+        if (menuMusic) {
+            sfMusic_setVolume(menuMusic, 0);
+        }
         if (levelMusic) {
             sfMusic_setVolume(levelMusic, 0);
         }
@@ -149,11 +153,18 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
     sfText* saveText = sfText_create();
     bool isOpen = true;
     sfVector2f mousePos;
+    int returnValue = 0;
 
-    if (!font || !backgroundTexture) {
+    if (!font || !backgroundTexture || !backgroundSprite || !saveButton || !saveText) {
         printf("Failed to load assets\n");
+        if (font) sfFont_destroy(font);
+        if (backgroundTexture) sfTexture_destroy(backgroundTexture);
+        if (backgroundSprite) sfSprite_destroy(backgroundSprite);
+        if (saveButton) sfRectangleShape_destroy(saveButton);
+        if (saveText) sfText_destroy(saveText);
         return -1;
     }
+
     sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
     sfRectangleShape_setSize(saveButton, (sfVector2f){200, 50});
     sfRectangleShape_setPosition(saveButton, (sfVector2f){(1920 / 2) - 100, 900});
@@ -168,9 +179,8 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
-                sfRenderWindow_destroy(window);
-                exit(0);
                 isOpen = false;
+                returnValue = -1;
             }
             if (event.type == sfEvtMouseButtonPressed) {
                 mousePos = (sfVector2f){event.mouseButton.x, event.mouseButton.y};
@@ -189,10 +199,12 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
                 sfFloatRect buttonBounds = sfRectangleShape_getGlobalBounds(saveButton);
                 if (sfFloatRect_contains(&buttonBounds, mousePos.x, mousePos.y)) {
                     isOpen = false;
+                    returnValue = 1;
                 }
             }
             if (event.type == sfEvtKeyPressed && event.key.code == sfKeyEscape) {
                 isOpen = false;
+                returnValue = -1;
             }
         }
 
@@ -211,12 +223,12 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
         sfRenderWindow_drawText(window, saveText, NULL);
         sfRenderWindow_display(window);
     }
+
     sfSprite_destroy(backgroundSprite);
     sfTexture_destroy(backgroundTexture);
     sfRectangleShape_destroy(saveButton);
     sfText_destroy(saveText);
     sfFont_destroy(font);
-
     apply_sound_settings(game_set, menuMusic, levelMusic);
-    return 0;
+    return returnValue;
 }
