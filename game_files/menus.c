@@ -36,20 +36,26 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
     sfIntRect rect = {0, 0, 50, 50};
     sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu/menu_persos.png", NULL);
     sfSprite* backgroundSprite = sfSprite_create();
-    sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
 
+    if (!backgroundTexture || !backgroundSprite || !font || !titleText)
+        return NULL;
+    sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
     for (int i = 0; i < 10; i++) {
         characterTextures[i] = sfTexture_createFromFile(characterFiles[i], NULL);
         characterSprites[i] = sfSprite_create();
+        if (!characterTextures[i] || !characterSprites[i])
+            return NULL;
         sfSprite_setTexture(characterSprites[i], characterTextures[i], sfTrue);
         sfSprite_setTextureRect(characterSprites[i], rect);
         sfSprite_setScale(characterSprites[i], (sfVector2f){4.0f, 4.0f});
-
         leftArrows[i] = sfRectangleShape_create();
+        if (!leftArrows[i])
+            return NULL;
         sfRectangleShape_setSize(leftArrows[i], (sfVector2f){30, 250});
         sfRectangleShape_setFillColor(leftArrows[i], sfBlack);
-
         rightArrows[i] = sfRectangleShape_create();
+        if (!rightArrows[i])
+            return NULL;
         sfRectangleShape_setSize(rightArrows[i], (sfVector2f){30, 250});
         sfRectangleShape_setFillColor(rightArrows[i], sfBlack);
     }
@@ -73,7 +79,6 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
     sfRectangleShape_setPosition(rightArrows[8], (sfVector2f){1380, 624});
     sfRectangleShape_setPosition(leftArrows[9], (sfVector2f){1500, 624});
     sfRectangleShape_setPosition(rightArrows[9], (sfVector2f){1710, 624});
-
     sfSprite_setPosition(characterSprites[0], (sfVector2f){195, 220});
     sfSprite_setPosition(characterSprites[1], (sfVector2f){525, 220});
     sfSprite_setPosition(characterSprites[2], (sfVector2f){860, 210});
@@ -84,14 +89,12 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
     sfSprite_setPosition(characterSprites[7], (sfVector2f){860, 640});
     sfSprite_setPosition(characterSprites[8], (sfVector2f){1185, 640});
     sfSprite_setPosition(characterSprites[9], (sfVector2f){1520, 630});
-
     sfText_setFont(titleText, font);
     sfText_setString(titleText, "Choose your Character");
     sfText_setCharacterSize(titleText, 48);
     sfText_setColor(titleText, sfBlack);
     titleBounds = sfText_getGlobalBounds(titleText);
     sfText_setPosition(titleText, (sfVector2f){(1920 - titleBounds.width) / 2, 50});
-
     while (menuOpen) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -150,7 +153,7 @@ int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, 
     bool menuOpen = true;
     int returned = 0;
 
-    if (!texture) {
+    if (!texture || !sprite_menu || !button1 || !button2 || !button3) {
         printf("Failed to load menu background\n");
         return -1;
     }
@@ -160,19 +163,16 @@ int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, 
     sfRectangleShape_setOutlineColor(button1, sfTransparent);
     sfRectangleShape_setOutlineThickness(button1, 2);
     sfRectangleShape_setFillColor(button1, sfTransparent);
-
     sfRectangleShape_setSize(button2, (sfVector2f){260, 125});
     sfRectangleShape_setPosition(button2, (sfVector2f){830, 635});
     sfRectangleShape_setOutlineColor(button2, sfTransparent);
     sfRectangleShape_setOutlineThickness(button2, 2);
     sfRectangleShape_setFillColor(button2, sfTransparent);
-
     sfRectangleShape_setSize(button3, (sfVector2f){225, 130});
     sfRectangleShape_setPosition(button3, (sfVector2f){845, 780});
     sfRectangleShape_setOutlineColor(button3, sfTransparent);
     sfRectangleShape_setOutlineThickness(button3, 2);
     sfRectangleShape_setFillColor(button3, sfTransparent);
-
     while (menuOpen) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -189,7 +189,10 @@ int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, 
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
-                        settings(window, game_set, menuMusic, NULL);
+                        if (settings(window, game_set, menuMusic, NULL) == -1) {
+                            sfRenderWindow_destroy(window);
+                            exit(0);
+                        }
                     } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
                         sfRenderWindow_close(window);
                         returned = -1;
@@ -292,12 +295,15 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
     sfText* buttonText3 = sfText_create();
     int newDifficulty;
     Assets newAssets;
-
     sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu/menu_esc.png", NULL);
     sfSprite* backgroundSprite = sfSprite_create();
+    static sfClock* gameClock = NULL;
+    static int moveCounter = 0;
+
+    if (!backgroundTexture || !backgroundSprite || !button1 || !button2 || !button3 || !buttonText1 || !buttonText2 || !buttonText3)
+        return;
     sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
     sfSprite_setPosition(backgroundSprite, (sfVector2f){0, 0});
-
     sfRectangleShape_setSize(button1, (sfVector2f){380, 75});
     sfRectangleShape_setFillColor(button1, sfTransparent);
     sfRectangleShape_setPosition(button1, (sfVector2f){WINDOW_WIDTH / 2 - 190, WINDOW_HEIGHT / 4 + 210});
@@ -322,7 +328,6 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
     sfText_setColor(buttonText3, sfBlack);
     sfText_setString(buttonText3, "Quit");
     sfText_setPosition(buttonText3, (sfVector2f){WINDOW_WIDTH / 2 - 60, WINDOW_HEIGHT / 4 + 415});
-
     while (menuOpen) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -340,6 +345,8 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
                         freeLevel(*level);
                         *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
+                        sfClock_restart(gameClock);
+                        moveCounter = 0;
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
                         newDifficulty = selectDifficulty(window, font);
@@ -373,21 +380,19 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
                         }
                         freeLevel(*level);
                         *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
-
                         if (assets->levelMusic != NULL) {
                             sfMusic_stop(assets->levelMusic);
                             sfMusic_destroy(assets->levelMusic);
                             assets->levelMusic = NULL;
                         }
-
                         freeAssets(*assets);
                         *assets = loadAssets(player->difficulty, window);
-
                         if (assets->levelMusic) {
                             sfMusic_setLoop(assets->levelMusic, sfTrue);
                             sfMusic_play(assets->levelMusic);
                         }
-
+                        sfClock_restart(gameClock);
+                        moveCounter = 0;
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
                         sfRenderWindow_close(window);
@@ -396,23 +401,24 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
                 }
             }
         }
+        sfRenderWindow_clear(window, sfWhite);
         sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
         sfRenderWindow_drawRectangleShape(window, button1, NULL);
-        sfRenderWindow_drawRectangleShape(window, button2, NULL);
-        sfRenderWindow_drawRectangleShape(window, button3, NULL);
         sfRenderWindow_drawText(window, buttonText1, NULL);
+        sfRenderWindow_drawRectangleShape(window, button2, NULL);
         sfRenderWindow_drawText(window, buttonText2, NULL);
+        sfRenderWindow_drawRectangleShape(window, button3, NULL);
         sfRenderWindow_drawText(window, buttonText3, NULL);
         sfRenderWindow_display(window);
     }
-    sfText_destroy(buttonText1);
-    sfText_destroy(buttonText2);
-    sfText_destroy(buttonText3);
     sfRectangleShape_destroy(button1);
+    sfText_destroy(buttonText1);
     sfRectangleShape_destroy(button2);
+    sfText_destroy(buttonText2);
     sfRectangleShape_destroy(button3);
-    sfSprite_destroy(backgroundSprite);
+    sfText_destroy(buttonText3);
     sfTexture_destroy(backgroundTexture);
+    sfSprite_destroy(backgroundSprite);
 }
 
 void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic, GameSettings *setting)
@@ -431,12 +437,13 @@ void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Leve
     sfText* buttonText3 = sfText_create();
     int newDifficulty;
     Assets newAssets;
-
     sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu/menu_esc.png", NULL);
     sfSprite* backgroundSprite = sfSprite_create();
+
+    if (!backgroundTexture || !backgroundSprite || !button1 || !button2 || !button3 || !buttonText1 || !buttonText2 || !buttonText3)
+        exit(84);
     sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
     sfSprite_setPosition(backgroundSprite, (sfVector2f){0, 0});
-
     sfRectangleShape_setSize(button1, (sfVector2f){380, 75});
     sfRectangleShape_setFillColor(button1, sfTransparent);
     sfRectangleShape_setPosition(button1, (sfVector2f){WINDOW_WIDTH / 2 - 190, WINDOW_HEIGHT / 4 + 210});
@@ -461,7 +468,6 @@ void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Leve
     sfText_setColor(buttonText3, sfBlack);
     sfText_setString(buttonText3, "Quit");
     sfText_setPosition(buttonText3, (sfVector2f){WINDOW_WIDTH / 2 - 60, WINDOW_HEIGHT / 4 + 415});
-
     while (menuOpen) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -478,37 +484,39 @@ void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Leve
                     button3Bounds = sfRectangleShape_getGlobalBounds(button3);
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
                         menuOpen = false;
-                    }
-                    if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
-                        settings(window, setting, menuMusic, NULL);
+                    } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
+                        if (settings(window, setting, menuMusic, assets->levelMusic) == -1) {
+                            sfRenderWindow_destroy(window);
+                            exit(0);
+                        }
+                        apply_sound_settings(setting, menuMusic, assets->levelMusic);
                         sfRenderWindow_clear(window, sfBlack);
                         menuOpen = true;
-                    }
-                    if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
+                    } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
                         sfRenderWindow_close(window);
                         menuOpen = false;
                     }
                 }
             }
         }
-        sfRenderWindow_clear(window, sfBlack);
+        sfRenderWindow_clear(window, sfWhite);
         sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
         sfRenderWindow_drawRectangleShape(window, button1, NULL);
-        sfRenderWindow_drawRectangleShape(window, button2, NULL);
-        sfRenderWindow_drawRectangleShape(window, button3, NULL);
         sfRenderWindow_drawText(window, buttonText1, NULL);
+        sfRenderWindow_drawRectangleShape(window, button2, NULL);
         sfRenderWindow_drawText(window, buttonText2, NULL);
+        sfRenderWindow_drawRectangleShape(window, button3, NULL);
         sfRenderWindow_drawText(window, buttonText3, NULL);
         sfRenderWindow_display(window);
     }
-    sfText_destroy(buttonText1);
-    sfText_destroy(buttonText2);
-    sfText_destroy(buttonText3);
     sfRectangleShape_destroy(button1);
+    sfText_destroy(buttonText1);
     sfRectangleShape_destroy(button2);
+    sfText_destroy(buttonText2);
     sfRectangleShape_destroy(button3);
-    sfSprite_destroy(backgroundSprite);
+    sfText_destroy(buttonText3);
     sfTexture_destroy(backgroundTexture);
+    sfSprite_destroy(backgroundSprite);
 }
 
 void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
@@ -524,25 +532,24 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
     sfFloatRect buttonBounds;
     sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu/menu_username.png", NULL);
     sfSprite* backgroundSprite = sfSprite_create();
-    sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
 
+    if (!backgroundTexture || !backgroundSprite || !nameText || !button || !buttonText)
+        return;
+    sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
     sfText_setFont(nameText, font);
     sfText_setCharacterSize(nameText, 100);
     sfText_setColor(nameText, sfBlack);
     sfText_setPosition(nameText, (sfVector2f){WINDOW_WIDTH / 2 - 400, WINDOW_HEIGHT / 2 - 80});
-
     sfRectangleShape_setSize(button, (sfVector2f){80, 80});
     sfRectangleShape_setFillColor(button, sfTransparent);
     sfRectangleShape_setPosition(button, (sfVector2f){WINDOW_WIDTH / 2 + 440, WINDOW_HEIGHT / 2 - 45});
     sfRectangleShape_setOutlineColor(button, sfBlack);
     sfRectangleShape_setOutlineThickness(button, 10);
-
     sfText_setFont(buttonText, font);
     sfText_setCharacterSize(buttonText, 30);
     sfText_setColor(buttonText, sfBlack);
     sfText_setString(buttonText, "OK");
     sfText_setPosition(buttonText, (sfVector2f){WINDOW_WIDTH / 2 + 455, WINDOW_HEIGHT / 2 - 25});
-
     while (!nameEntered) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -579,11 +586,9 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
         sfRenderWindow_drawText(window, buttonText, NULL);
         sfRenderWindow_display(window);
     }
-
     strncpy(player->playerName, name, MAX_NAME_LENGTH);
     if (strlen(player->playerName) == 0)
         strncpy(player->playerName, "Guest", MAX_NAME_LENGTH);
-
     sfText_destroy(nameText);
     sfText_destroy(buttonText);
     sfRectangleShape_destroy(button);

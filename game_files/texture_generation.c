@@ -21,16 +21,16 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
     sfVector2f spriteScale = {scale, scale};
     sfIntRect rect = {0, 0, 50, 50};
 
-    if (playerTexture == NULL) {
+    if (playerTexture == NULL)
         exit(0);
-    }
     assets.backgroundSprite = sfSprite_create();
     assets.boxSprite = sfSprite_create();
     assets.targetSprite = sfSprite_create();
     assets.floorSprite = sfSprite_create();
     assets.wallSprite = sfSprite_create();
     assets.playerSprite = sfSprite_create();
-
+    if (!assets.backgroundSprite || !assets.boxSprite || !assets.targetSprite || !assets.floorSprite || !assets.wallSprite || !assets.playerSprite)
+        exit(84);
     switch (difficulty) {
         case 1:
             boxTexture = sfTexture_createFromFile("assets/decorations/easy/box.png", NULL);
@@ -93,10 +93,13 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
             assets.levelMusic = sfMusic_createFromFile("assets/musics/easy.mp3");
             break;
     }
-
+    if (!boxTexture || !targetTexture || !floorTexture || !wallTexture || !backgroundTexture || !assets.levelMusic)
+        exit(84);
     for (int i = 0; i < 6; i++) {
         if (pokemonTextures[i]) {
             assets.pokemonSprites[i] = sfSprite_create();
+            if (!assets.pokemonSprites[i])
+                exit(84);
             sfSprite_setTexture(assets.pokemonSprites[i], pokemonTextures[i], sfTrue);
             sfSprite_setScale(assets.pokemonSprites[i], spriteScale);
             assets.pokemonTextures[i] = pokemonTextures[i];
@@ -105,7 +108,6 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
             assets.pokemonTextures[i] = NULL;
         }
     }
-
     switch (difficulty) {
         case 1:
             sfSprite_setPosition(assets.pokemonSprites[0], (sfVector2f){1550, 325});
@@ -135,20 +137,16 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
             
             break;
     }
-
     sfSprite_setTexture(assets.wallSprite, wallTexture, sfTrue);
     sfSprite_setTexture(assets.backgroundSprite, backgroundTexture, sfTrue);
     sfSprite_setTexture(assets.boxSprite, boxTexture, sfTrue);
     sfSprite_setTexture(assets.targetSprite, targetTexture, sfTrue);
     sfSprite_setTexture(assets.floorSprite, floorTexture, sfTrue);
     sfSprite_setTexture(assets.playerSprite, playerTexture, sfTrue);
-
     sfSprite_setTextureRect(assets.playerSprite, rect);
-
     sfSprite_setScale(assets.boxSprite, spriteScale);
     sfSprite_setScale(assets.targetSprite, spriteScale);
     sfSprite_setScale(assets.floorSprite, spriteScale);
     sfSprite_setScale(assets.wallSprite, spriteScale);
-
     return assets;
 }

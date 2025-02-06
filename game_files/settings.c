@@ -18,7 +18,6 @@ GameSettings *init_settings(void)
     settings->soundEffectsVolume = 50;
     settings->showMoveCounter = true;
     settings->showTimer = true;
-    settings->showPushCounter = true;
     settings->showFps = false;
     return settings;
 }
@@ -32,6 +31,8 @@ static void drawSlider(sfRenderWindow* window, sfFont* font, const char* label,
     sfVector2f mousePos;
     char valueStr[10];
     
+    if (!text || !slider || !handle)
+        exit(84);
     sfText_setFont(text, font);
     sfText_setCharacterSize(text, 24);
     sfText_setColor(text, sfBlack);
@@ -51,7 +52,6 @@ static void drawSlider(sfRenderWindow* window, sfFont* font, const char* label,
     sfText_setString(text, valueStr);
     sfText_setPosition(text, (sfVector2f){position.x + 470, position.y});
     sfRenderWindow_drawText(window, text, NULL);
-    
     sfText_destroy(text);
     sfRectangleShape_destroy(slider);
     sfRectangleShape_destroy(handle);
@@ -64,13 +64,14 @@ static void drawToggle(sfRenderWindow* window, sfFont* font, const char* label,
     sfRectangleShape* toggle = sfRectangleShape_create();
     sfText* toggleText = sfText_create();
     
+    if (!text || !toggle || !toggleText)
+        exit(84);
     sfText_setFont(text, font);
     sfText_setCharacterSize(text, 24);
     sfText_setColor(text, sfBlack);
     sfText_setString(text, label);
     sfText_setPosition(text, position);
     sfRenderWindow_drawText(window, text, NULL);
-
     sfRectangleShape_setSize(toggle, (sfVector2f){60, 30});
     sfRectangleShape_setPosition(toggle, (sfVector2f){position.x + 350, position.y});
     sfRectangleShape_setOutlineThickness(toggle, 2);
@@ -83,13 +84,11 @@ static void drawToggle(sfRenderWindow* window, sfFont* font, const char* label,
         sfText_setString(toggleText, "x");
     }
     sfRenderWindow_drawRectangleShape(window, toggle, NULL);
-
     sfText_setFont(toggleText, font);
     sfText_setCharacterSize(toggleText, 24);
     sfText_setColor(toggleText, sfBlack);
     sfText_setPosition(toggleText, (sfVector2f){position.x + 370, position.y - 3});
     sfRenderWindow_drawText(window, toggleText, NULL);
-
     sfText_destroy(text);
     sfRectangleShape_destroy(toggle);
     sfText_destroy(toggleText);
@@ -109,41 +108,28 @@ static void handleSliderClick(sfVector2f mousePos, sfVector2f position, int* val
 static void handleToggleClick(sfVector2f mousePos, sfVector2f position, bool* value)
 {
     if (mousePos.y >= position.y && mousePos.y <= position.y + 30) {
-        if (mousePos.x >= position.x + 250 && mousePos.x <= position.x + 310) {
+        if (mousePos.x >= position.x + 250 && mousePos.x <= position.x + 310)
             *value = !*value;
-        }
     }
-}
-
-void apply_brightness(sfRenderWindow* window, float brightness) {
-    sfColor color = sfColor_fromRGB(
-        (sfUint8)(255 * brightness),
-        (sfUint8)(255 * brightness),
-        (sfUint8)(255 * brightness)
-    );
-    sfRenderWindow_clear(window, color);
 }
 
 void apply_sound_settings(GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic)
 {
     if (game_set->musicEnabled) {
-        if (menuMusic) {
+        if (menuMusic)
             sfMusic_setVolume(menuMusic, game_set->musicVolume);
-        }
-        if (levelMusic) {
+        if (levelMusic)
             sfMusic_setVolume(levelMusic, game_set->musicVolume);
-        }
     } else {
-        if (menuMusic) {
+        if (menuMusic)
             sfMusic_setVolume(menuMusic, 0);
-        }
-        if (levelMusic) {
+        if (levelMusic)
             sfMusic_setVolume(levelMusic, 0);
-        }
     }
 }
 
-int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic)
+int settings(sfRenderWindow* window, GameSettings* game_set,
+    sfMusic* menuMusic, sfMusic* levelMusic)
 {
     sfEvent event;
     sfFont* font = sfFont_createFromFile("assets/font.ttf");
@@ -154,17 +140,11 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
     bool isOpen = true;
     sfVector2f mousePos;
     int returnValue = 0;
+    sfFloatRect buttonBounds;
 
     if (!font || !backgroundTexture || !backgroundSprite || !saveButton || !saveText) {
-        printf("Failed to load assets\n");
-        if (font) sfFont_destroy(font);
-        if (backgroundTexture) sfTexture_destroy(backgroundTexture);
-        if (backgroundSprite) sfSprite_destroy(backgroundSprite);
-        if (saveButton) sfRectangleShape_destroy(saveButton);
-        if (saveText) sfText_destroy(saveText);
-        return -1;
+        exit(84);
     }
-
     sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
     sfRectangleShape_setSize(saveButton, (sfVector2f){200, 50});
     sfRectangleShape_setPosition(saveButton, (sfVector2f){(1920 / 2) - 100, 900});
@@ -174,7 +154,6 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
     sfText_setCharacterSize(saveText, 20);
     sfText_setColor(saveText, sfWhite);
     sfText_setPosition(saveText, (sfVector2f){870, 910});
-
     while (isOpen && sfRenderWindow_isOpen(window)) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed) {
@@ -184,19 +163,15 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
             }
             if (event.type == sfEvtMouseButtonPressed) {
                 mousePos = (sfVector2f){event.mouseButton.x, event.mouseButton.y};
-
                 handleSliderClick(mousePos, (sfVector2f){700, 300}, &game_set->musicVolume);
                 handleSliderClick(mousePos, (sfVector2f){700, 400}, &game_set->soundEffectsVolume);
-
                 handleToggleClick(mousePos, (sfVector2f){800, 500}, &game_set->showGridLines);
                 handleToggleClick(mousePos, (sfVector2f){800, 550}, &game_set->musicEnabled);
                 handleToggleClick(mousePos, (sfVector2f){800, 600}, &game_set->soundEffectsEnabled);
                 handleToggleClick(mousePos, (sfVector2f){800, 650}, &game_set->showMoveCounter);
                 handleToggleClick(mousePos, (sfVector2f){800, 700}, &game_set->showTimer);
                 handleToggleClick(mousePos, (sfVector2f){800, 750}, &game_set->showFps);
-                handleToggleClick(mousePos, (sfVector2f){800, 800}, &game_set->showPushCounter);
-
-                sfFloatRect buttonBounds = sfRectangleShape_getGlobalBounds(saveButton);
+                buttonBounds = (sfFloatRect)sfRectangleShape_getGlobalBounds(saveButton);
                 if (sfFloatRect_contains(&buttonBounds, mousePos.x, mousePos.y)) {
                     isOpen = false;
                     returnValue = 1;
@@ -207,7 +182,6 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
                 returnValue = -1;
             }
         }
-
         sfRenderWindow_clear(window, sfWhite);
         sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
         drawSlider(window, font, "Music Volume", &game_set->musicVolume, (sfVector2f){700, 300});
@@ -218,12 +192,10 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
         drawToggle(window, font, "Show Move Counter", &game_set->showMoveCounter, (sfVector2f){700, 650});
         drawToggle(window, font, "Show Timer", &game_set->showTimer, (sfVector2f){700, 700});
         drawToggle(window, font, "Show FPS", &game_set->showFps, (sfVector2f){700, 750});
-        drawToggle(window, font, "Show Push Counter", &game_set->showPushCounter, (sfVector2f){700, 800});
         sfRenderWindow_drawRectangleShape(window, saveButton, NULL);
         sfRenderWindow_drawText(window, saveText, NULL);
         sfRenderWindow_display(window);
     }
-
     sfSprite_destroy(backgroundSprite);
     sfTexture_destroy(backgroundTexture);
     sfRectangleShape_destroy(saveButton);

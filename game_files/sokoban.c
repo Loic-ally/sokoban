@@ -154,9 +154,8 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
             while (level->grid[level->targets[i].y][level->targets[i].x] == 'B');
             level->grid[level->targets[i].y][level->targets[i].x] = 'T';
         }
-        for (int i = 0; i < numPokemons; i++) {
+        for (int i = 0; i < numPokemons; i++)
             level->pokemons[i] = getRandomEmptyPositionForPokemon();
-        }
         solvable = isMapSolvable(level);
         if (!solvable)
             freeLevel(level);
@@ -164,7 +163,7 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
     return level;
 }
 
-void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection)
+void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection, GameSettings* settings, sfFont* font, int moveCounter, sfClock* gameClock)
 {
     float offsetX = (WINDOW_WIDTH - MAX_WIDTH * TILE_SIZE) / 2;
     float offsetY = (WINDOW_HEIGHT - MAX_HEIGHT * TILE_SIZE) / 2;
@@ -173,10 +172,41 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
     static int frame = 0;
     static int frameCounter = 0;
     const int frameDelay = 10;
+    static sfClock* fpsClock = NULL;
+    static int fps = 0;
+    static int frameCount = 0;
+    char fpsStr[50];
+    char moveCounterStr[50];
+    char timerStr[50];
+    sfTime elapsed;
+    sfTime fpsElapsed;
+    float seconds;
+    float fpsSeconds;
+    sfRectangleShape* gridLine = sfRectangleShape_create();
+    int wallSpriteIndex;
+    sfIntRect wallRect;
+    sfIntRect rect;
+    sfIntRect pokemonRect;
+    sfText* timerText = sfText_create();
+    sfText* moveCounterText = sfText_create();
+    sfText* fpsText = sfText_create();
 
+    if (!fpsClock)
+        fpsClock = sfClock_create();
+    if (!gridLine || !timerText || !moveCounterText || !fpsText || !fpsClock) {
+        exit(84);
+    }
+    elapsed = sfClock_getElapsedTime(gameClock);
+    fpsElapsed = sfClock_getElapsedTime(fpsClock);
+    seconds = sfTime_asSeconds(elapsed);
+    fpsSeconds = sfTime_asSeconds(fpsElapsed);
+    if (fpsSeconds >= 1.0f) {
+        fps = frameCount;
+        frameCount = 0;
+        sfClock_restart(fpsClock);
+    }
     sfSprite_setPosition(assets.backgroundSprite, (sfVector2f){0, 0});
     sfRenderWindow_drawSprite(window, assets.backgroundSprite, NULL);
-
     for (int y = 0; y < MAX_HEIGHT; y++) {
         for (int x = 0; x < MAX_WIDTH; x++) {
             pos = (sfVector2f){x * TILE_SIZE + offsetX, y * TILE_SIZE + offsetY};
@@ -188,8 +218,8 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
                 case '#':
                     sfSprite_setPosition(assets.floorSprite, pos);
                     sfRenderWindow_drawSprite(window, assets.floorSprite, NULL);
-                    int wallSpriteIndex = level->wallSpriteIndices[y][x];
-                    sfIntRect wallRect = { (wallSpriteIndex % 3) * 50, (wallSpriteIndex / 3) * 50, 50, 50 };
+                    wallSpriteIndex = level->wallSpriteIndices[y][x];
+                    wallRect = (sfIntRect){ (wallSpriteIndex % 3) * 50, (wallSpriteIndex / 3) * 50, 50, 50 };
                     sfSprite_setTextureRect(assets.wallSprite, wallRect);
                     sfSprite_setPosition(assets.wallSprite, pos);
                     sfRenderWindow_drawSprite(window, assets.wallSprite, NULL);
@@ -211,31 +241,67 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
                 default:
                     break;
             }
+            if (settings->showGridLines) {
+                sfRectangleShape_setSize(gridLine, (sfVector2f){TILE_SIZE, TILE_SIZE});
+                sfRectangleShape_setPosition(gridLine, pos);
+                sfRectangleShape_setFillColor(gridLine, sfTransparent);
+                sfRectangleShape_setOutlineColor(gridLine, sfColor_fromRGB(200, 200, 200));
+                sfRectangleShape_setOutlineThickness(gridLine, 1);
+                sfRenderWindow_drawRectangleShape(window, gridLine, NULL);
+            }
         }
     }
-
-    sfIntRect rect = {0, animationDirection * 50, 50, 50};
+    sfRectangleShape_destroy(gridLine);
+    rect = (sfIntRect){0, animationDirection * 50, 50, 50};
     sfSprite_setTextureRect(assets.playerSprite, rect);
     playerPos = (sfVector2f){level->player.x * TILE_SIZE + offsetX, level->player.y * TILE_SIZE + offsetY};
     sfSprite_setPosition(assets.playerSprite, playerPos);
     sfRenderWindow_drawSprite(window, assets.playerSprite, NULL);
-
     if (frameCounter >= frameDelay) {
         frame = (frame + 1) % 4;
         frameCounter = 0;
-    } else {
+    } else
         frameCounter++;
-    }
-
     for (int i = 0; i < numPokemons; i++) {
         sfSprite_setScale(assets.pokemonSprites[i], (sfVector2f){2, 2});
-        sfIntRect pokemonRect = {frame * 50, 0, 50, 50};
+        pokemonRect = (sfIntRect){frame * 50, 0, 50, 50};
         sfSprite_setTextureRect(assets.pokemonSprites[i], pokemonRect);
         sfRenderWindow_drawSprite(window, assets.pokemonSprites[i], NULL);
     }
+    if (settings->showTimer) {
+        sfText_setFont(timerText, font);
+        sfText_setCharacterSize(timerText, 24);
+        sfText_setColor(timerText, sfBlack);
+        sprintf(timerStr, "Time: %.2f", seconds);
+        sfText_setString(timerText, timerStr);
+        sfText_setPosition(timerText, (sfVector2f){10, 10});
+        sfRenderWindow_drawText(window, timerText, NULL);
+        sfText_destroy(timerText);
+    }
+    if (settings->showMoveCounter) {
+        sfText_setFont(moveCounterText, font);
+        sfText_setCharacterSize(moveCounterText, 24);
+        sfText_setColor(moveCounterText, sfBlack);
+        sprintf(moveCounterStr, "Moves: %d", moveCounter);
+        sfText_setString(moveCounterText, moveCounterStr);
+        sfText_setPosition(moveCounterText, (sfVector2f){10, 40});
+        sfRenderWindow_drawText(window, moveCounterText, NULL);
+        sfText_destroy(moveCounterText);
+    }
+    if (settings->showFps) {
+        sfText_setFont(fpsText, font);
+        sfText_setCharacterSize(fpsText, 24);
+        sfText_setColor(fpsText, sfBlack);
+        sprintf(fpsStr, "FPS: %d", fps);
+        sfText_setString(fpsText, fpsStr);
+        sfText_setPosition(fpsText, (sfVector2f){10, 70});
+        sfRenderWindow_drawText(window, fpsText, NULL);
+        sfText_destroy(fpsText);
+    }
+    frameCount++;
 }
 
-Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection)
+Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter)
 {
     int newX = level->player.x + dx;
     int newY = level->player.y + dy;
@@ -289,6 +355,8 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
     } else if (dy == -1) {
         *animationDirection = 3;
     }
+
+    (*moveCounter)++;
 
     return assets;
 }

@@ -70,7 +70,6 @@ typedef struct {
     bool showMoveCounter;
     bool showTimer;
     bool showFps;
-    bool showPushCounter;
 } GameSettings;
 
 GameSettings *init_settings(void);
@@ -79,7 +78,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window);
 void freeAssets(Assets assets);
 void freeLevel(Level* level);
 bool checkWin(Level* level);
-Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection);
+Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter);
 Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);
@@ -90,9 +89,8 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
 void saveScore(Player player);
 void loadScore(Player* player);
 int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic);
-void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection);
+void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection, GameSettings* settings, sfFont* font, int moveCounter, sfClock* gameClock);
 sfTexture* customCharacter(sfRenderWindow* window, Assets assets);
 void apply_sound_settings(GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic);
-
 
 #endif // SOKOBAN_H
