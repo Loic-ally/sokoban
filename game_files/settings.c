@@ -11,7 +11,6 @@ GameSettings *init_settings(void)
 {
     GameSettings *settings = malloc(sizeof(GameSettings));
 
-    settings->brightness = 50;
     settings->showGridLines = false;
     settings->musicEnabled = true;
     settings->musicVolume = 50;
@@ -116,7 +115,31 @@ static void handleToggleClick(sfVector2f mousePos, sfVector2f position, bool* va
     }
 }
 
-int settings(sfRenderWindow* window, GameSettings* game_set)
+void apply_brightness(sfRenderWindow* window, float brightness) {
+    sfColor color = sfColor_fromRGB(
+        (sfUint8)(255 * brightness),
+        (sfUint8)(255 * brightness),
+        (sfUint8)(255 * brightness)
+    );
+    sfRenderWindow_clear(window, color);
+}
+
+void apply_sound_settings(GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic)
+{
+    if (game_set->musicEnabled) {
+        sfMusic_setVolume(menuMusic, game_set->musicVolume);
+        if (levelMusic) {
+            sfMusic_setVolume(levelMusic, game_set->musicVolume);
+        }
+    } else {
+        sfMusic_setVolume(menuMusic, 0);
+        if (levelMusic) {
+            sfMusic_setVolume(levelMusic, 0);
+        }
+    }
+}
+
+int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic)
 {
     sfEvent event;
     sfFont* font = sfFont_createFromFile("assets/font.ttf");
@@ -152,7 +175,6 @@ int settings(sfRenderWindow* window, GameSettings* game_set)
             if (event.type == sfEvtMouseButtonPressed) {
                 mousePos = (sfVector2f){event.mouseButton.x, event.mouseButton.y};
 
-                handleSliderClick(mousePos, (sfVector2f){700, 200}, &game_set->brightness);
                 handleSliderClick(mousePos, (sfVector2f){700, 300}, &game_set->musicVolume);
                 handleSliderClick(mousePos, (sfVector2f){700, 400}, &game_set->soundEffectsVolume);
 
@@ -176,7 +198,6 @@ int settings(sfRenderWindow* window, GameSettings* game_set)
 
         sfRenderWindow_clear(window, sfWhite);
         sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
-        drawSlider(window, font, "Brightness", &game_set->brightness, (sfVector2f){700, 200});
         drawSlider(window, font, "Music Volume", &game_set->musicVolume, (sfVector2f){700, 300});
         drawSlider(window, font, "Sound Effects", &game_set->soundEffectsVolume, (sfVector2f){700, 400});
         drawToggle(window, font, "Show Grid Lines", &game_set->showGridLines, (sfVector2f){700, 500});
@@ -196,5 +217,6 @@ int settings(sfRenderWindow* window, GameSettings* game_set)
     sfText_destroy(saveText);
     sfFont_destroy(font);
 
+    apply_sound_settings(game_set, menuMusic, levelMusic);
     return 0;
 }

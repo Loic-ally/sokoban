@@ -36,7 +36,7 @@ int main(void)
         sfMusic_setLoop(menuMusic, sfTrue);
         sfMusic_play(menuMusic);
     }
-    error = displayGameMenu(window, &assets, menuMusic, settings);
+    error = displayGameMenu(window, &assets, menuMusic, settings, levelMusic);
     if (error == -1)
         return 0;
     
@@ -52,6 +52,7 @@ int main(void)
         sfMusic_setLoop(levelMusic, sfTrue);
         sfMusic_play(levelMusic);
     }
+    apply_sound_settings(settings, menuMusic, levelMusic);
     switch (player.difficulty) {
         case 1:
             minBoxes = 1;
@@ -109,7 +110,7 @@ int main(void)
                         level = generateLevel(minBoxes, maxBoxes, numPokemons);
                         break;
                     case sfKeyEscape:
-                        displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, NULL);
+                        displaPauseMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, NULL);
                         break;
                     default:
                         break;
@@ -133,7 +134,7 @@ int main(void)
                             break;
                     }
                     saveScore(player);
-                    displayMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, menuMusic);
+                    displaPauseMenu(window, font, &player, &level, &minBoxes, &maxBoxes, &assets, &numPokemons, menuMusic);
                 }
             }
         }

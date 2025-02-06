@@ -62,7 +62,6 @@ typedef struct {
 } Player;
 
 typedef struct {
-    int brightness;
     bool showGridLines;
     bool musicEnabled;
     int musicVolume;
@@ -84,13 +83,15 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
 Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);
-void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic);
-int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* settings);
+void displaPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic);
+int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* settings, sfMusic* levelMusic);
 void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
 void saveScore(Player player);
 void loadScore(Player* player);
-int settings(sfRenderWindow* window, GameSettings* game_set);
+int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic);
 void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection);
 sfTexture* customCharacter(sfRenderWindow* window, Assets assets); // Add this line
+void apply_sound_settings(GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic);
+
 
 #endif // SOKOBAN_H
