@@ -1,33 +1,37 @@
 # Pokémon Sokoban
 
-Pokémon Sokoban is a themed version of the classic puzzle game Sokoban, where the player pushes Pokémon-themed boxes around a warehouse, trying to get them to storage locations. This implementation of Sokoban is written in C using CFSML.
+Welcome to **Pokémon Sokoban**! This is a delightful twist on the classic Sokoban puzzle game, featuring Pokémon-themed boxes. In this game, you'll push these themed boxes around a warehouse, aiming to get them to designated storage locations. This implementation of Sokoban is written in C using CFSML.
+
+<!-- ![Pokémon Sokoban Banner](path/to/banner/image.png)  Add a banner image for visual appeal -->
 
 ## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Gameplay](#gameplay)
-- [Future Plans](#future-plans)
-- [Contributing](#contributing)
-- [License](#license)
+- [Pokémon Sokoban](#pokémon-sokoban)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Gameplay](#gameplay)
+    - [Controls](#controls)
+  - [Future Plans](#future-plans)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## Installation
 
-To install and run Pokémon Sokoban, follow these steps:
+To install and run **Pokémon Sokoban**, follow these steps:
 
-1. Clone the repository:
+1. **Clone the repository**:
    ```sh
    git clone https://github.com/Loic-ally/sokoban.git
    cd sokoban
-   ```
 
-2. Build the project using Make:
+2. **Build the project using Make**:
    ```sh
    make
    ```
 
 ## Usage
 
-Once the project is built, you can start the game by running:
+**Once the project is built, you can start the game by running**:
 ```sh
 ./sokoban
 ```
@@ -49,24 +53,20 @@ Currently, the levels are randomly generated, and some may not be solvable. Our 
 
 Contributions are welcome! If you have any ideas or improvements, feel free to open an issue or submit a pull request.
 
-1. Fork the repository
-2. Create a new branch:
+1. **Fork the repository**
+2. **Create a new branch**:
    ```sh
    git checkout -b feature/your-feature-name
    ```
 
-3. Commit your changes:
+3. **Commit your changes**:
    ```sh
    git commit -m 'Add some feature'
    ```
 
-4. Push to the branch:
+4. **Push to the branch**:
    ```sh
    git push origin feature/your-feature-name
    ```
 
-5. Open a pull request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+5. **Open a pull request**
