@@ -9,8 +9,9 @@
 
 int main(void)
 {
+    GameSettings *settings = init_settings();
     sfVideoMode mode = {WINDOW_WIDTH, WINDOW_HEIGHT, 32};
-    sfRenderWindow* window = sfRenderWindow_create(mode, "Sokoban", sfResize | sfClose, NULL);
+    sfRenderWindow* window = sfRenderWindow_create(mode, "Sokoban", sfClose, NULL);
     sfView* view;
     sfEvent event;
     Level* level = NULL;
@@ -35,7 +36,7 @@ int main(void)
         sfMusic_setLoop(menuMusic, sfTrue);
         sfMusic_play(menuMusic);
     }
-    error = displayGameMenu(window, &assets, menuMusic);
+    error = displayGameMenu(window, &assets, menuMusic, settings);
     if (error == -1)
         return 0;
     

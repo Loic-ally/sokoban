@@ -100,12 +100,7 @@ sfTexture* customCharacter(sfRenderWindow* window, Assets assets)
     return NULL;
 }
 
-int settings(sfRenderWindow *window)
-{
-    return 0;
-}
-
-int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic)
+int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* game_set)
 {
     sfTexture* texture = sfTexture_createFromFile("assets/menu/menu_background.png", NULL);
     sfSprite* sprite_menu = sfSprite_create();
@@ -159,7 +154,7 @@ int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic)
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
-                        settings(window);
+                        settings(window, game_set);
                     } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
                         sfRenderWindow_close(window);
                         returned = -1;

@@ -10,6 +10,7 @@ SRC = 	main.c \
 		game_files/sokoban.c \
 		game_files/menus.c \
 		game_files/texture_generation.c \
+		game_files/settings.c \
 
 OBJ = $(SRC:.c=.o)
 

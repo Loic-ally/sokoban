@@ -61,6 +61,22 @@ typedef struct {
     int difficulty;
 } Player;
 
+typedef struct {
+    int brightness;         // 0-100
+    bool showGridLines;     // Show/hide grid lines on playing field
+    
+    bool musicEnabled;
+    int musicVolume;       // 0-100
+    bool soundEffectsEnabled;
+    int soundEffectsVolume; // 0-100
+    
+    bool showMoveCounter;
+    bool showTimer;
+    bool showFps;
+    bool showPushCounter;   // Count number of box pushes
+} GameSettings;
+
+GameSettings *init_settings(void);
 int selectDifficulty(sfRenderWindow* window, sfFont* font);
 Assets loadAssets(int difficulty, sfRenderWindow* window);
 void freeAssets(Assets assets);
@@ -71,10 +87,11 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);
 void displayMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic);
-int displayGameMenu(sfRenderWindow* window, Assets* assets, sfMusic* menuMusic);
+int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* settings);
 void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
 void saveScore(Player player);
 void loadScore(Player* player);
+int settings(sfRenderWindow* window, GameSettings* game_set);
 void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection);
 sfTexture* customCharacter(sfRenderWindow* window, Assets assets); // Add this line
 
