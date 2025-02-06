@@ -38,8 +38,8 @@ The objective of the game is to push all the Pokémon-themed boxes onto the stor
 
 ### Controls
 * **Z,S,Q,D**: Move the player up, down, left, or right
-* **R**: Restart the current level
-* **Q**: Quit the game
+* **R**: Restart the current level (currently generates a new map)
+* **Escape**: Open the game's menu / Quit the game
 
 ## Future Plans
 
