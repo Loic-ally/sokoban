@@ -1,6 +1,6 @@
-# Pokémon Sokoban
+# Pokokoban
 
-Pokémon Sokoban is a themed version of the classic puzzle game Sokoban, where the player pushes Pokémon-themed boxes around a warehouse, trying to get them to storage locations. This implementation of Sokoban is written in C using CFSML.
+Pokokoban is a themed version of the classic puzzle game Sokoban, where the player pushes Pokémon-themed boxes around a warehouse, trying to get them to storage locations. This implementation of Sokoban is written in C using CFSML.
 
 ## Table of Contents
 - [Installation](#installation)
@@ -12,7 +12,7 @@ Pokémon Sokoban is a themed version of the classic puzzle game Sokoban, where t
 
 ## Installation
 
-To install and run Pokémon Sokoban, follow these steps:
+To install and run Pokokoban, follow these steps:
 
 1. **Clone the repository**:
    ```sh
