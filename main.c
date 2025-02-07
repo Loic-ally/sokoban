@@ -40,12 +40,17 @@ int main(void)
         sfMusic_setLoop(menuMusic, sfTrue);
         sfMusic_play(menuMusic);
     }
+    gamemenudisplay:
     error = displayGameMenu(window, &assets, menuMusic, settings, levelMusic);
     if (error == -1)
         return 0;
-    askPlayerName(window, font, &player);
+    askname:
+    if (askPlayerName(window, font, &player) == -1)
+        goto gamemenudisplay;
     loadScore(&player);
     player.difficulty = selectDifficulty(window, font);
+    if (player.difficulty == -1)
+        goto askname;
     assets = loadAssets(player.difficulty, window);
     if (menuMusic) {
         sfMusic_stop(menuMusic);

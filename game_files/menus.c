@@ -516,7 +516,7 @@ void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Leve
     sfSprite_destroy(backgroundSprite);
 }
 
-void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
+int askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
 {
     sfEvent event;
     sfText* nameText = sfText_create();
@@ -531,7 +531,7 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
     sfSprite* backgroundSprite = sfSprite_create();
 
     if (!backgroundTexture || !backgroundSprite || !nameText || !button || !buttonText)
-        return;
+        return -1;
     sfSprite_setTexture(backgroundSprite, backgroundTexture, sfTrue);
     sfText_setFont(nameText, font);
     sfText_setCharacterSize(nameText, 100);
@@ -552,6 +552,9 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
                 exit(0);
+            }
+            if (event.type == sfEvtKeyPressed && event.key.code == sfKeyEscape) {
+                return -1;
             }
             if (event.type == sfEvtTextEntered) {
                 if (event.text.unicode == '\r' || event.text.unicode == '\n')
@@ -591,4 +594,5 @@ void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player)
     sfRectangleShape_destroy(button);
     sfSprite_destroy(backgroundSprite);
     sfTexture_destroy(backgroundTexture);
+    return 0;
 }

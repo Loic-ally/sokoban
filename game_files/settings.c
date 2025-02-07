@@ -13,7 +13,7 @@ GameSettings *init_settings(void)
 
     settings->showGridLines = false;
     settings->musicEnabled = true;
-    settings->musicVolume = 100;
+    settings->musicVolume = 50;
     settings->soundEffectsEnabled = true;
     settings->soundEffectsVolume = 100;
     settings->showMoveCounter = true;
@@ -179,7 +179,7 @@ int settings(sfRenderWindow* window, GameSettings* game_set,
             }
             if (event.type == sfEvtKeyPressed && event.key.code == sfKeyEscape) {
                 isOpen = false;
-                returnValue = -1;
+                returnValue = 1;
             }
         }
         sfRenderWindow_clear(window, sfWhite);

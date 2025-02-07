@@ -49,6 +49,9 @@ int selectDifficulty(sfRenderWindow* window, sfFont* font)
     sfText_setPosition(buttonText4, (sfVector2f){WINDOW_WIDTH / 4 + 620, WINDOW_HEIGHT / 4 + 350});
     while (!difficultySelected) {
         while (sfRenderWindow_pollEvent(window, &event)) {
+            if (event.type == sfEvtKeyPressed && event.key.code == sfKeyEscape) {
+                return -1;
+            }
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
                 difficultySelected = true;

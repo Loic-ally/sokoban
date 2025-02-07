@@ -87,7 +87,7 @@ bool canReachTarget(Level* level, Position box, Position target);
 void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic, GameSettings *setting);
 void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic);
 int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* settings, sfMusic* levelMusic);
-void askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
+int askPlayerName(sfRenderWindow* window, sfFont* font, Player* player);
 void saveScore(Player player);
 void loadScore(Player* player);
 int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic);
