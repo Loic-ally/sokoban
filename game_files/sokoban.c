@@ -36,7 +36,6 @@ void play_rock_sound(Assets assets, GameSettings* settings)
 
 bool isValid(int x, int y)
 {
-    //demander a une ia parce que je suis pas jesus
     return (unsigned)x < MAX_WIDTH && (unsigned)y < MAX_HEIGHT;
 }
 
@@ -93,6 +92,9 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
     bool solvable = false;
     int maxWalls;
     int wallCount;
+    int x;
+    int step;
+    int y;
 
     while (!solvable) {
         level = (Level*)malloc(sizeof(Level));
@@ -143,7 +145,7 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
                 level->grid[y][0] = '\0';
         }
         wallCount = 0;
-        int step = sqrt(totalCells / maxWalls);
+        step = sqrt(totalCells / maxWalls);
         for (int y = 1; y < MAX_HEIGHT - 1 && wallCount < maxWalls; y += step) {
             for (int x = 1; x < MAX_WIDTH - 1 && wallCount < maxWalls; x += step) {
                 if (rand() % 100 < 30) {
@@ -154,8 +156,8 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
             }
         }
         while (wallCount < maxWalls) {
-            int x = rand() % (MAX_WIDTH - 2) + 1;
-            int y = rand() % (MAX_HEIGHT - 2) + 1;
+            x = rand() % (MAX_WIDTH - 2) + 1;
+            y = rand() % (MAX_HEIGHT - 2) + 1;
             if (level->grid[y][x] == ' ') {
                 level->grid[y][x] = '#';
                 level->wallSpriteIndices[y][x] = rand() % 9;
@@ -212,9 +214,8 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
 
     if (!fpsClock)
         fpsClock = sfClock_create();
-    if (!gridLine || !timerText || !moveCounterText || !fpsText || !fpsClock) {
+    if (!gridLine || !timerText || !moveCounterText || !fpsText || !fpsClock)
         exit(84);
-    }
     elapsed = sfClock_getElapsedTime(gameClock);
     fpsElapsed = sfClock_getElapsedTime(fpsClock);
     seconds = sfTime_asSeconds(elapsed);
@@ -351,11 +352,9 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
         if (!isOnTarget)
             play_rock_sound(assets, setting);
         isOnTarget = (level->grid[pushY][pushX] == 'T');
-
         level->grid[level->boxes[boxIndex].y][level->boxes[boxIndex].x] = ' ';
         level->boxes[boxIndex].x = pushX;
         level->boxes[boxIndex].y = pushY;
-
         if (isOnTarget) {
             play_water_sound(water, setting);
             level->grid[pushY][pushX] = ' ';
@@ -371,15 +370,13 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
                     sfRenderWindow_display(window);
                     sfSleep(sfMilliseconds(100));
                 }
-        } else {
+        } else
             level->grid[pushY][pushX] = 'B';
-        }
     }
     level->grid[level->player.y][level->player.x] = ' ';
     level->player.x = newX;
     level->player.y = newY;
     level->grid[newY][newX] = 'P';
-
     if (dx == 1)
         *animationDirection = 2;
     else if (dx == -1)
