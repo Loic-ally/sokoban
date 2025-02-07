@@ -318,7 +318,10 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
     bool isBox = false;
     int boxIndex = -1;
     bool isOnTarget = false;
+    sfMusic *water = sfMusic_createFromFile("assets/musics/water_sound.mp3");
 
+    if (!water)
+        exit(84);
     if (!isValid(newX, newY) || level->grid[newY][newX] == '#' || level->grid[newY][newX] == 'T')
         return assets;
     for (int i = 0; i < level->numBoxes; i++) {
@@ -333,7 +336,8 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
         pushY = newY + dy;
         if (!isValid(pushX, pushY) || level->grid[pushY][pushX] == '#' || level->grid[pushY][pushX] == 'B')
             return assets;
-        play_rock_sound(assets, setting);
+        if (!isOnTarget)
+            play_rock_sound(assets, setting);
         isOnTarget = (level->grid[pushY][pushX] == 'T');
 
         level->grid[level->boxes[boxIndex].y][level->boxes[boxIndex].x] = ' ';
@@ -341,6 +345,7 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
         level->boxes[boxIndex].y = pushY;
 
         if (isOnTarget) {
+            sfMusic_play(water);
             level->grid[pushY][pushX] = ' ';
             for (int i = boxIndex; i < level->numBoxes - 1; i++)
                 level->boxes[i] = level->boxes[i + 1];
