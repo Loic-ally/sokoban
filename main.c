@@ -89,6 +89,8 @@ int main(void)
             break;
     }
     level = generateLevel(minBoxes, maxBoxes, numPokemons);
+    for (int i = 0; i < 18; i++)
+        printf("%s\n", level->grid[i]);
     sfClock_restart(gameClock);
     moveCounter = 0;
     while (sfRenderWindow_isOpen(window)) {

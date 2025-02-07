@@ -101,13 +101,13 @@ int getNumBoxesForDifficulty(int difficulty)
 {
     switch (difficulty) {
         case 1:
-            return MIN_BOXES + rand() % 2;
+            return 1 + rand() % 4;
         case 2:
-            return 2 + rand() % 2;
+            return 6 + rand() % 4;
         case 3:
-            return 3 + rand() % 2;
+            return 11 + rand() % 4;
         case 4:
-            return 5 + rand() % 6;
+            return 16 + rand() % 4;
         default:
             return MIN_BOXES;
     }

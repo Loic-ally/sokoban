@@ -7,12 +7,6 @@
 
 #include "../include/sokoban.h"
 
-bool isValid(int x, int y)
-{
-    //demander a une ia parce que je suis pas jesus
-    return (unsigned)x < MAX_WIDTH && (unsigned)y < MAX_HEIGHT;
-}
-
 Position getRandomEmptyPosition(Level* level)
 {
     Position pos;
@@ -22,6 +16,14 @@ Position getRandomEmptyPosition(Level* level)
         pos.y = rand() % (MAX_HEIGHT - 2) + 1;
     } while (level->grid[pos.y][pos.x] != ' ');
     return pos;
+}
+
+void play_water_sound(sfMusic* water, GameSettings* settings)
+{
+    if (settings->soundEffectsEnabled) {
+        sfMusic_setVolume(water, settings->soundEffectsVolume);
+        sfMusic_play(water);
+    }
 }
 
 void play_rock_sound(Assets assets, GameSettings* settings)
@@ -57,6 +59,12 @@ Position getRandomEmptyPositionForPokemon()
     }
 
     return pos;
+}
+
+bool isValid(int x, int y)
+{
+    //demander a une ia parce que je suis pas jesus
+    return (unsigned)x < MAX_WIDTH && (unsigned)y < MAX_HEIGHT;
 }
 
 bool canReachTarget(Level* level, Position box, Position target)
@@ -345,7 +353,7 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
         level->boxes[boxIndex].y = pushY;
 
         if (isOnTarget) {
-            sfMusic_play(water);
+            play_water_sound(water, setting);
             level->grid[pushY][pushX] = ' ';
             for (int i = boxIndex; i < level->numBoxes - 1; i++)
                 level->boxes[i] = level->boxes[i + 1];
