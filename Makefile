@@ -19,7 +19,7 @@ NAME = sokoban
 CFLAGS = -g
 
 all: $(OBJ)
-	gcc -o $(NAME) $(OBJ) -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -fsanitize=address
+	gcc -o $(NAME) $(OBJ) -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -fsanitize=address -O3
 
 clean:
 	rm -f $(OBJ)

@@ -91,6 +91,8 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
 {
     Level* level;
     bool solvable = false;
+    int maxWalls;
+    int wallCount;
 
     while (!solvable) {
         level = (Level*)malloc(sizeof(Level));
@@ -107,6 +109,24 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
             freeLevel(level);
             return NULL;
         }
+        int totalCells = (MAX_WIDTH - 2) * (MAX_HEIGHT - 2);
+        switch (level->difficulty) {
+            case 1:
+                maxWalls = totalCells * 20 / 100;
+                break;
+            case 2:
+                maxWalls = totalCells * 25 / 100;
+                break;
+            case 3:
+                maxWalls = totalCells * 35 / 100;
+                break;
+            case 4:
+                maxWalls = totalCells * 40 / 100;
+                break;
+            default:
+                maxWalls = totalCells * 10 / 100;
+                break;
+        }
         for (int y = 0; y < MAX_HEIGHT + 1; y++) {
             for (int x = 0; x < MAX_WIDTH + 1; x++) {
                 if (x == 0 || x == MAX_WIDTH - 1 || y == 0 || y == MAX_HEIGHT - 1) {
@@ -122,12 +142,24 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
             if (y == MAX_HEIGHT)
                 level->grid[y][0] = '\0';
         }
-        for (int y = 1; y < MAX_HEIGHT - 1; y++) {
-            for (int x = 1; x < MAX_WIDTH - 1; x++) {
+        wallCount = 0;
+        int step = sqrt(totalCells / maxWalls);
+        for (int y = 1; y < MAX_HEIGHT - 1 && wallCount < maxWalls; y += step) {
+            for (int x = 1; x < MAX_WIDTH - 1 && wallCount < maxWalls; x += step) {
                 if (rand() % 100 < 30) {
                     level->grid[y][x] = '#';
                     level->wallSpriteIndices[y][x] = rand() % 9;
+                    wallCount++;
                 }
+            }
+        }
+        while (wallCount < maxWalls) {
+            int x = rand() % (MAX_WIDTH - 2) + 1;
+            int y = rand() % (MAX_HEIGHT - 2) + 1;
+            if (level->grid[y][x] == ' ') {
+                level->grid[y][x] = '#';
+                level->wallSpriteIndices[y][x] = rand() % 9;
+                wallCount++;
             }
         }
         level->player = getRandomEmptyPosition(level);
@@ -288,7 +320,7 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
     frameCount++;
 }
 
-Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter, GameSettings* setting)
+Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter, GameSettings* setting, sfRenderWindow *window)
 {
     int newX = level->player.x + dx;
     int newY = level->player.y + dy;
@@ -298,6 +330,7 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
     int boxIndex = -1;
     bool isOnTarget = false;
     sfMusic *water = sfMusic_createFromFile("assets/musics/water_sound.mp3");
+    sfIntRect splashRect = {0, 0, 50, 50};
 
     if (!water)
         exit(84);
@@ -329,6 +362,15 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
             for (int i = boxIndex; i < level->numBoxes - 1; i++)
                 level->boxes[i] = level->boxes[i + 1];
             level->numBoxes--;
+                sfSprite_setTextureRect(assets.splashSprite, splashRect);
+                sfSprite_setPosition(assets.splashSprite, (sfVector2f){pushX * TILE_SIZE + (WINDOW_WIDTH - MAX_WIDTH * TILE_SIZE) / 2, pushY * TILE_SIZE + (WINDOW_HEIGHT - MAX_HEIGHT * TILE_SIZE) / 2});
+                for (int frame = 0; frame < 5; frame++) {
+                    splashRect.left = frame * 50;
+                    sfSprite_setTextureRect(assets.splashSprite, splashRect);
+                    sfRenderWindow_drawSprite(window, assets.splashSprite, NULL);
+                    sfRenderWindow_display(window);
+                    sfSleep(sfMilliseconds(100));
+                }
         } else {
             level->grid[pushY][pushX] = 'B';
         }
@@ -338,18 +380,15 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
     level->player.y = newY;
     level->grid[newY][newX] = 'P';
 
-    if (dx == 1) {
+    if (dx == 1)
         *animationDirection = 2;
-    } else if (dx == -1) {
+    else if (dx == -1)
         *animationDirection = 1;
-    } else if (dy == 1) {
+    else if (dy == 1)
         *animationDirection = 0;
-    } else if (dy == -1) {
+    else if (dy == -1)
         *animationDirection = 3;
-    }
-
     (*moveCounter)++;
-
     return assets;
 }
 
@@ -403,6 +442,10 @@ void freeAssets(Assets assets)
         sfSprite_destroy(assets.floorSprite);
     if (assets.wallSprite)
         sfSprite_destroy(assets.wallSprite);
+    if (assets.splashSprite)
+        sfSprite_destroy(assets.splashSprite);
+    if (assets.splashTexture)
+        sfTexture_destroy(assets.splashTexture);
     for (int i = 0; i < 6; i++) {
         if (assets.pokemonSprites[i])
             sfSprite_destroy(assets.pokemonSprites[i]);

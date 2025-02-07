@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stddef.h>
+#include <math.h>
 
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
@@ -40,6 +41,7 @@ typedef struct {
     Position* pokemons;
     int numBoxes;
     int wallSpriteIndices[MAX_HEIGHT][MAX_WIDTH];
+    int difficulty;
 } Level;
 
 typedef struct {
@@ -55,6 +57,8 @@ typedef struct {
     sfMusic* levelMusic;
     sfSound* rockSound;
     sfSoundBuffer* rockSoundBuffer;
+    sfSprite* splashSprite;
+    sfTexture* splashTexture;
 } Assets;
 
 typedef struct {
@@ -80,7 +84,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window);
 void freeAssets(Assets assets);
 void freeLevel(Level* level);
 bool checkWin(Level* level);
-Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter, GameSettings* setting);
+Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter, GameSettings* setting, sfRenderWindow *window);
 Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);

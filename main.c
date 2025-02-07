@@ -89,8 +89,7 @@ int main(void)
             break;
     }
     level = generateLevel(minBoxes, maxBoxes, numPokemons);
-    for (int i = 0; i < 18; i++)
-        printf("%s\n", level->grid[i]);
+    level->difficulty = player.difficulty;
     sfClock_restart(gameClock);
     moveCounter = 0;
     while (sfRenderWindow_isOpen(window)) {
@@ -107,28 +106,28 @@ int main(void)
             if (event.type == sfEvtKeyPressed) {
                 switch (event.key.code) {
                     case sfKeyZ:
-                        assets = movePlayer(level, 0, -1, assets, &animationDirection, &moveCounter, settings);
+                        assets = movePlayer(level, 0, -1, assets, &animationDirection, &moveCounter, settings, window);
                         break;
                     case sfKeyS:
-                        assets = movePlayer(level, 0, 1, assets, &animationDirection, &moveCounter, settings);
+                        assets = movePlayer(level, 0, 1, assets, &animationDirection, &moveCounter, settings, window);
                         break;
                     case sfKeyQ:
-                        assets = movePlayer(level, -1, 0, assets, &animationDirection, &moveCounter, settings);
+                        assets = movePlayer(level, -1, 0, assets, &animationDirection, &moveCounter, settings, window);
                         break;
                     case sfKeyD:
-                        assets = movePlayer(level, 1, 0, assets, &animationDirection, &moveCounter, settings);
+                        assets = movePlayer(level, 1, 0, assets, &animationDirection, &moveCounter, settings, window);
                         break;
                     case sfKeyUp:
-                        assets = movePlayer(level, 0, -1, assets, &animationDirection, &moveCounter, settings);
+                        assets = movePlayer(level, 0, -1, assets, &animationDirection, &moveCounter, settings, window);
                         break;
                     case sfKeyDown:
-                        assets = movePlayer(level, 0, 1, assets, &animationDirection, &moveCounter, settings);
+                        assets = movePlayer(level, 0, 1, assets, &animationDirection, &moveCounter, settings, window);
                         break;
                     case sfKeyLeft:
-                        assets = movePlayer(level, -1, 0, assets, &animationDirection, &moveCounter, settings);
+                        assets = movePlayer(level, -1, 0, assets, &animationDirection, &moveCounter, settings, window);
                         break;
                     case sfKeyRight:
-                        assets = movePlayer(level, 1, 0, assets, &animationDirection, &moveCounter, settings);
+                        assets = movePlayer(level, 1, 0, assets, &animationDirection, &moveCounter, settings, window);
                         break;
                     case sfKeyR:
                         freeLevel(level);

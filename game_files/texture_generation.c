@@ -31,7 +31,8 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
     assets.wallSprite = sfSprite_create();
     assets.playerSprite = sfSprite_create();
     assets.rockSound = sfSound_create();
-    if (!assets.backgroundSprite || !assets.boxSprite || !assets.targetSprite || !assets.floorSprite || !assets.wallSprite || !assets.playerSprite || !assets.rockSound || !assets.rockSoundBuffer)
+    assets.splashSprite = sfSprite_create();
+    if (!assets.backgroundSprite || !assets.boxSprite || !assets.targetSprite || !assets.floorSprite || !assets.wallSprite || !assets.playerSprite || !assets.rockSound || !assets.rockSoundBuffer || !assets.splashSprite)
         exit(84);
     switch (difficulty) {
         case 1:
@@ -45,6 +46,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
             pokemonTextures[3] = sfTexture_createFromFile("assets/decorations/easy/pokemon3.png", NULL);
             wallTexture = sfTexture_createFromFile("assets/decorations/easy/walls_easy.png", NULL);
             assets.levelMusic = sfMusic_createFromFile("assets/musics/easy.mp3");
+            assets.splashTexture = sfTexture_createFromFile("assets/splash_not_hell.png", NULL);
             break;
         case 2:
             boxTexture = sfTexture_createFromFile("assets/decorations/normal/box.png", NULL);
@@ -58,6 +60,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
             pokemonTextures[4] = sfTexture_createFromFile("assets/decorations/normal/pokemon4.png", NULL);
             wallTexture = sfTexture_createFromFile("assets/decorations/normal/walls_normal.png", NULL);
             assets.levelMusic = sfMusic_createFromFile("assets/musics/normal.mp3");
+            assets.splashTexture = sfTexture_createFromFile("assets/splash_not_hell.png", NULL);
             break;
         case 3:
             boxTexture = sfTexture_createFromFile("assets/decorations/hard/box.png", NULL);
@@ -70,6 +73,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
             pokemonTextures[3] = sfTexture_createFromFile("assets/decorations/hard/pokemon3.png", NULL);
             wallTexture = sfTexture_createFromFile("assets/decorations/hard/walls_hard.png", NULL);
             assets.levelMusic = sfMusic_createFromFile("assets/musics/hard.mp3");
+            assets.splashTexture = sfTexture_createFromFile("assets/splash_not_hell.png", NULL);
             break;
         case 4:
             boxTexture = sfTexture_createFromFile("assets/decorations/hell/box.png", NULL);
@@ -81,6 +85,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
             pokemonTextures[2] = sfTexture_createFromFile("assets/decorations/hell/pokemon2.png", NULL);
             wallTexture = sfTexture_createFromFile("assets/decorations/hell/walls_hell.png", NULL);
             assets.levelMusic = sfMusic_createFromFile("assets/musics/hell.mp3");
+            assets.splashTexture = sfTexture_createFromFile("assets/splash_hell.png", NULL);
             break;
         default:
             boxTexture = sfTexture_createFromFile("assets/decorations/easy/box.png", NULL);
@@ -93,10 +98,13 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
             pokemonTextures[3] = sfTexture_createFromFile("assets/decorations/easy/pokemon3.png", NULL);
             wallTexture = sfTexture_createFromFile("assets/decorations/easy/walls_easy.png", NULL);
             assets.levelMusic = sfMusic_createFromFile("assets/musics/easy.mp3");
+            assets.splashTexture = sfTexture_createFromFile("assets/splash_not_hell.png", NULL);
             break;
     }
-    if (!boxTexture || !targetTexture || !floorTexture || !wallTexture || !backgroundTexture || !assets.levelMusic)
+    if (!boxTexture || !targetTexture || !floorTexture || !wallTexture || !backgroundTexture || !assets.levelMusic || !assets.splashTexture)
         exit(84);
+    sfSprite_setTexture(assets.splashSprite, assets.splashTexture, sfTrue);
+    sfSprite_setScale(assets.splashSprite, spriteScale);
     for (int i = 0; i < 6; i++) {
         if (pokemonTextures[i]) {
             assets.pokemonSprites[i] = sfSprite_create();
