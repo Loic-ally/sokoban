@@ -34,33 +34,6 @@ void play_rock_sound(Assets assets, GameSettings* settings)
     }
 }
 
-Position getRandomEmptyPositionForPokemon()
-{
-    Position pos;
-    int area = rand() % 4;
-
-    switch (area) {
-        case 0:
-            pos.x = 
-            pos.y = rand() % ((WINDOW_HEIGHT - 900) / 2);
-            break;
-        case 1:
-            pos.x = rand() % WINDOW_WIDTH;
-            pos.y = WINDOW_HEIGHT - ((WINDOW_HEIGHT - 900) / 2) + rand() % ((WINDOW_HEIGHT - 900) / 2);
-            break;
-        case 2:
-            pos.x = rand() % ((WINDOW_WIDTH - 900) / 2);
-            pos.y = rand() % WINDOW_HEIGHT;
-            break;
-        case 3:
-            pos.x = WINDOW_WIDTH - ((WINDOW_WIDTH - 900) / 2) + rand() % ((WINDOW_WIDTH - 900) / 2);
-            pos.y = rand() % WINDOW_HEIGHT;
-            break;
-    }
-
-    return pos;
-}
-
 bool isValid(int x, int y)
 {
     //demander a une ia parce que je suis pas jesus
@@ -170,8 +143,6 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
             while (level->grid[level->targets[i].y][level->targets[i].x] == 'B');
             level->grid[level->targets[i].y][level->targets[i].x] = 'T';
         }
-        for (int i = 0; i < numPokemons; i++)
-            level->pokemons[i] = getRandomEmptyPositionForPokemon();
         solvable = isMapSolvable(level);
         if (!solvable)
             freeLevel(level);
