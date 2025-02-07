@@ -53,6 +53,8 @@ typedef struct {
     sfTexture* pokemonTextures[6];
     sfTexture* wallTexture;
     sfMusic* levelMusic;
+    sfSound* rockSound;
+    sfSoundBuffer* rockSoundBuffer;
 } Assets;
 
 typedef struct {
@@ -78,7 +80,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window);
 void freeAssets(Assets assets);
 void freeLevel(Level* level);
 bool checkWin(Level* level);
-Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter);
+Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter, GameSettings* setting);
 Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);

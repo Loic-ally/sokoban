@@ -19,6 +19,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
     sfTexture* backgroundTexture;
     sfTexture* pokemonTextures[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
     sfVector2f spriteScale = {scale, scale};
+    assets.rockSoundBuffer = sfSoundBuffer_createFromFile("assets/musics/block_move.ogg");
     sfIntRect rect = {0, 0, 50, 50};
 
     if (playerTexture == NULL)
@@ -29,7 +30,8 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
     assets.floorSprite = sfSprite_create();
     assets.wallSprite = sfSprite_create();
     assets.playerSprite = sfSprite_create();
-    if (!assets.backgroundSprite || !assets.boxSprite || !assets.targetSprite || !assets.floorSprite || !assets.wallSprite || !assets.playerSprite)
+    assets.rockSound = sfSound_create();
+    if (!assets.backgroundSprite || !assets.boxSprite || !assets.targetSprite || !assets.floorSprite || !assets.wallSprite || !assets.playerSprite || !assets.rockSound || !assets.rockSoundBuffer)
         exit(84);
     switch (difficulty) {
         case 1:
@@ -148,5 +150,7 @@ Assets loadAssets(int difficulty, sfRenderWindow* window)
     sfSprite_setScale(assets.targetSprite, spriteScale);
     sfSprite_setScale(assets.floorSprite, spriteScale);
     sfSprite_setScale(assets.wallSprite, spriteScale);
+    sfSound_setBuffer(assets.rockSound, assets.rockSoundBuffer);
+    sfSound_setVolume(assets.rockSound, 50);
     return assets;
 }

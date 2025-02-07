@@ -15,7 +15,7 @@ GameSettings *init_settings(void)
     settings->musicEnabled = true;
     settings->musicVolume = 100;
     settings->soundEffectsEnabled = true;
-    settings->soundEffectsVolume = 50;
+    settings->soundEffectsVolume = 100;
     settings->showMoveCounter = true;
     settings->showTimer = true;
     settings->showFps = false;

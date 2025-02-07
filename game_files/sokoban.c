@@ -24,6 +24,14 @@ Position getRandomEmptyPosition(Level* level)
     return pos;
 }
 
+void play_rock_sound(Assets assets, GameSettings* settings)
+{
+    if (settings->soundEffectsEnabled) {
+        sfSound_setVolume(assets.rockSound, settings->soundEffectsVolume);
+        sfSound_play(assets.rockSound);
+    }
+}
+
 Position getRandomEmptyPositionForPokemon()
 {
     Position pos;
@@ -163,7 +171,7 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
     return level;
 }
 
-void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection, GameSettings* settings, sfFont* font, int moveCounter, sfClock* gameClock)
+void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection, GameSettings* setting, sfFont* font, int moveCounter, sfClock* gameClock)
 {
     float offsetX = (WINDOW_WIDTH - MAX_WIDTH * TILE_SIZE) / 2;
     float offsetY = (WINDOW_HEIGHT - MAX_HEIGHT * TILE_SIZE) / 2;
@@ -241,7 +249,7 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
                 default:
                     break;
             }
-            if (settings->showGridLines) {
+            if (setting->showGridLines) {
                 sfRectangleShape_setSize(gridLine, (sfVector2f){TILE_SIZE, TILE_SIZE});
                 sfRectangleShape_setPosition(gridLine, pos);
                 sfRectangleShape_setFillColor(gridLine, sfTransparent);
@@ -268,7 +276,7 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
         sfSprite_setTextureRect(assets.pokemonSprites[i], pokemonRect);
         sfRenderWindow_drawSprite(window, assets.pokemonSprites[i], NULL);
     }
-    if (settings->showTimer) {
+    if (setting->showTimer) {
         sfText_setFont(timerText, font);
         sfText_setCharacterSize(timerText, 24);
         sfText_setColor(timerText, sfBlack);
@@ -278,7 +286,7 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
         sfRenderWindow_drawText(window, timerText, NULL);
         sfText_destroy(timerText);
     }
-    if (settings->showMoveCounter) {
+    if (setting->showMoveCounter) {
         sfText_setFont(moveCounterText, font);
         sfText_setCharacterSize(moveCounterText, 24);
         sfText_setColor(moveCounterText, sfBlack);
@@ -288,7 +296,7 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
         sfRenderWindow_drawText(window, moveCounterText, NULL);
         sfText_destroy(moveCounterText);
     }
-    if (settings->showFps) {
+    if (setting->showFps) {
         sfText_setFont(fpsText, font);
         sfText_setCharacterSize(fpsText, 24);
         sfText_setColor(fpsText, sfBlack);
@@ -301,7 +309,7 @@ void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPok
     frameCount++;
 }
 
-Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter)
+Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter, GameSettings* setting)
 {
     int newX = level->player.x + dx;
     int newY = level->player.y + dy;
@@ -325,7 +333,7 @@ Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDir
         pushY = newY + dy;
         if (!isValid(pushX, pushY) || level->grid[pushY][pushX] == '#' || level->grid[pushY][pushX] == 'B')
             return assets;
-
+        play_rock_sound(assets, setting);
         isOnTarget = (level->grid[pushY][pushX] == 'T');
 
         level->grid[level->boxes[boxIndex].y][level->boxes[boxIndex].x] = ' ';
@@ -417,4 +425,8 @@ void freeAssets(Assets assets)
         if (assets.pokemonTextures[i])
             sfTexture_destroy(assets.pokemonTextures[i]);
     }
+    if (assets.rockSound)
+        sfSound_destroy(assets.rockSound);
+    if (assets.rockSoundBuffer)
+        sfSoundBuffer_destroy(assets.rockSoundBuffer);
 }

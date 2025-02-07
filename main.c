@@ -100,28 +100,28 @@ int main(void)
             if (event.type == sfEvtKeyPressed) {
                 switch (event.key.code) {
                     case sfKeyZ:
-                        assets = movePlayer(level, 0, -1, assets, &animationDirection, &moveCounter);
+                        assets = movePlayer(level, 0, -1, assets, &animationDirection, &moveCounter, settings);
                         break;
                     case sfKeyS:
-                        assets = movePlayer(level, 0, 1, assets, &animationDirection, &moveCounter);
+                        assets = movePlayer(level, 0, 1, assets, &animationDirection, &moveCounter, settings);
                         break;
                     case sfKeyQ:
-                        assets = movePlayer(level, -1, 0, assets, &animationDirection, &moveCounter);
+                        assets = movePlayer(level, -1, 0, assets, &animationDirection, &moveCounter, settings);
                         break;
                     case sfKeyD:
-                        assets = movePlayer(level, 1, 0, assets, &animationDirection, &moveCounter);
+                        assets = movePlayer(level, 1, 0, assets, &animationDirection, &moveCounter, settings);
                         break;
                     case sfKeyUp:
-                        assets = movePlayer(level, 0, -1, assets, &animationDirection, &moveCounter);
+                        assets = movePlayer(level, 0, -1, assets, &animationDirection, &moveCounter, settings);
                         break;
                     case sfKeyDown:
-                        assets = movePlayer(level, 0, 1, assets, &animationDirection, &moveCounter);
+                        assets = movePlayer(level, 0, 1, assets, &animationDirection, &moveCounter, settings);
                         break;
                     case sfKeyLeft:
-                        assets = movePlayer(level, -1, 0, assets, &animationDirection, &moveCounter);
+                        assets = movePlayer(level, -1, 0, assets, &animationDirection, &moveCounter, settings);
                         break;
                     case sfKeyRight:
-                        assets = movePlayer(level, 1, 0, assets, &animationDirection, &moveCounter);
+                        assets = movePlayer(level, 1, 0, assets, &animationDirection, &moveCounter, settings);
                         break;
                     case sfKeyR:
                         freeLevel(level);
