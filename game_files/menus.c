@@ -297,7 +297,6 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
     Assets newAssets;
     sfTexture* backgroundTexture = sfTexture_createFromFile("assets/menu/menu_esc.png", NULL);
     sfSprite* backgroundSprite = sfSprite_create();
-    static sfClock* gameClock = NULL;
     static int moveCounter = 0;
 
     if (!backgroundTexture || !backgroundSprite || !button1 || !button2 || !button3 || !buttonText1 || !buttonText2 || !buttonText3)
@@ -345,7 +344,6 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
                         freeLevel(*level);
                         *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
-                        sfClock_restart(gameClock);
                         moveCounter = 0;
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
@@ -391,7 +389,6 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
                             sfMusic_setLoop(assets->levelMusic, sfTrue);
                             sfMusic_play(assets->levelMusic);
                         }
-                        sfClock_restart(gameClock);
                         moveCounter = 0;
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button3Bounds, mousePos.x, mousePos.y)) {
