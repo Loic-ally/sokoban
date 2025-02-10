@@ -86,7 +86,7 @@ bool isMapSolvable(Level* level)
     return true;
 }
 
-Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
+Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons, int difficulty)
 {
     Level* level;
     bool solvable = false;
@@ -112,18 +112,19 @@ Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons)
             return NULL;
         }
         int totalCells = (MAX_WIDTH - 2) * (MAX_HEIGHT - 2);
+        level->difficulty = difficulty;
         switch (level->difficulty) {
             case 1:
-                maxWalls = totalCells * 20 / 100;
+                maxWalls = totalCells * 15 / 100;
                 break;
             case 2:
-                maxWalls = totalCells * 25 / 100;
+                maxWalls = totalCells * 15 / 100;
                 break;
             case 3:
-                maxWalls = totalCells * 35 / 100;
+                maxWalls = totalCells * 17.5 / 100;
                 break;
             case 4:
-                maxWalls = totalCells * 40 / 100;
+                maxWalls = totalCells * 17.5 / 100;
                 break;
             default:
                 maxWalls = totalCells * 10 / 100;

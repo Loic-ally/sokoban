@@ -343,7 +343,7 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
                     button3Bounds = sfRectangleShape_getGlobalBounds(button3);
                     if (sfFloatRect_contains(&button1Bounds, mousePos.x, mousePos.y)) {
                         freeLevel(*level);
-                        *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
+                        *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons, player->difficulty);
                         moveCounter = 0;
                         menuOpen = false;
                     } else if (sfFloatRect_contains(&button2Bounds, mousePos.x, mousePos.y)) {
@@ -377,7 +377,7 @@ void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level*
                                 break;
                         }
                         freeLevel(*level);
-                        *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons);
+                        *level = generateLevel(*minBoxes, *maxBoxes, *numPokemons, player->difficulty);
                         if (assets->levelMusic != NULL) {
                             sfMusic_stop(assets->levelMusic);
                             sfMusic_destroy(assets->levelMusic);

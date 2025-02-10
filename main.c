@@ -88,7 +88,7 @@ int main(void)
             numPokemons = 4;
             break;
     }
-    level = generateLevel(minBoxes, maxBoxes, numPokemons);
+    level = generateLevel(minBoxes, maxBoxes, numPokemons, player.difficulty);
     level->difficulty = player.difficulty;
     sfClock_restart(gameClock);
     moveCounter = 0;
@@ -131,7 +131,7 @@ int main(void)
                         break;
                     case sfKeyR:
                         freeLevel(level);
-                        level = generateLevel(minBoxes, maxBoxes, numPokemons);
+                        level = generateLevel(minBoxes, maxBoxes, numPokemons, player.difficulty);
                         moveCounter = 0;
                         sfClock_restart(gameClock);
                         break;

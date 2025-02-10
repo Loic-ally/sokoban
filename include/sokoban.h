@@ -85,7 +85,7 @@ void freeAssets(Assets assets);
 void freeLevel(Level* level);
 bool checkWin(Level* level);
 Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter, GameSettings* setting, sfRenderWindow *window);
-Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons);
+Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons, int difficulty);
 bool isMapSolvable(Level* level);
 bool canReachTarget(Level* level, Position box, Position target);
 void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic, GameSettings *setting);
