@@ -34,38 +34,38 @@ void play_rock_sound(Assets assets, GameSettings* settings)
     }
 }
 
+#include <stdbool.h>
+
 bool isValid(int x, int y)
 {
     return (unsigned)x < MAX_WIDTH && (unsigned)y < MAX_HEIGHT;
 }
 
-bool canReachTarget(Level* level, Position box, Position target)
+bool canReachTarget(Level* level, Position box, Position target, Position player)
 {
     bool visited[MAX_HEIGHT][MAX_WIDTH] = {false};
     Position queue[MAX_WIDTH * MAX_HEIGHT];
     int front = 0, rear = 0;
     const int dx[] = {0, 1, 0, -1};
     const int dy[] = {-1, 0, 1, 0};
-    Position current;
-    int newY;
-    int newX;
-    int pushX;
-    int pushY;
-    
+
     queue[rear++] = box;
     visited[box.y][box.x] = true;
+
     while (front < rear) {
-        current = queue[front++];
+        Position current = queue[front++];
         if (current.x == target.x && current.y == target.y)
             return true;
+
         for (int i = 0; i < 4; i++) {
-            newX = current.x + dx[i];
-            newY = current.y + dy[i];
-            if (isValid(newX, newY) && !visited[newY][newX] && 
+            int newX = current.x + dx[i];
+            int newY = current.y + dy[i];
+            int pushX = current.x - dx[i];
+            int pushY = current.y - dy[i];
+            if (isValid(pushX, pushY) && level->grid[pushY][pushX] != '#' &&
+                isValid(newX, newY) && !visited[newY][newX] &&
                 level->grid[newY][newX] != '#') {
-                pushX = current.x - dx[i];
-                pushY = current.y - dy[i];
-                if (isValid(pushX, pushY) && level->grid[pushY][pushX] != '#') {
+                if (playerCanReach(level, player, pushX, pushY)) {
                     queue[rear].x = newX;
                     queue[rear].y = newY;
                     rear++;
@@ -77,10 +77,59 @@ bool canReachTarget(Level* level, Position box, Position target)
     return false;
 }
 
+bool isDeadlocked(Level* level, Position box)
+{
+    if (level->grid[box.y][box.x] == '.') return false;
+
+    int wallCount = 0;
+    if (level->grid[box.y - 1][box.x] == '#') wallCount++;
+    if (level->grid[box.y + 1][box.x] == '#') wallCount++;
+    if (level->grid[box.y][box.x - 1] == '#') wallCount++;
+    if (level->grid[box.y][box.x + 1] == '#') wallCount++;
+    if (wallCount >= 2) return true;
+
+    return false;
+}
+
+bool playerCanReach(Level* level, Position player, int x, int y)
+{
+    bool visited[MAX_HEIGHT][MAX_WIDTH] = {false};
+    Position queue[MAX_WIDTH * MAX_HEIGHT];
+    int front = 0, rear = 0;
+    const int dx[] = {0, 1, 0, -1};
+    const int dy[] = {-1, 0, 1, 0};
+
+    queue[rear++] = player;
+    visited[player.y][player.x] = true;
+
+    while (front < rear) {
+        Position current = queue[front++];
+
+        if (current.x == x && current.y == y)
+            return true;
+
+        for (int i = 0; i < 4; i++) {
+            int newX = current.x + dx[i];
+            int newY = current.y + dy[i];
+
+            if (isValid(newX, newY) && !visited[newY][newX] &&
+                level->grid[newY][newX] != '#' && level->grid[newY][newX] != 'B') {
+                queue[rear].x = newX;
+                queue[rear].y = newY;
+                rear++;
+                visited[newY][newX] = true;
+            }
+        }
+    }
+
+    return false;
+}
+
 bool isMapSolvable(Level* level)
 {
     for (int i = 0; i < level->numBoxes; i++) {
-        if (!canReachTarget(level, level->boxes[i], level->targets[i]))
+        if (isDeadlocked(level, level->boxes[i]) || 
+            !canReachTarget(level, level->boxes[i], level->targets[i], level->player))
             return false;
     }
     return true;

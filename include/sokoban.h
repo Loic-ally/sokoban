@@ -87,7 +87,7 @@ bool checkWin(Level* level);
 Assets movePlayer(Level* level, int dx, int dy, Assets assets, int* animationDirection, int* moveCounter, GameSettings* setting, sfRenderWindow *window);
 Level* generateLevel(int minBoxes, int maxBoxes, int numPokemons, int difficulty);
 bool isMapSolvable(Level* level);
-bool canReachTarget(Level* level, Position box, Position target);
+bool canReachTarget(Level* level, Position box, Position target, Position player);
 void displayPauseMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic, GameSettings *setting);
 void displayWinMenu(sfRenderWindow* window, sfFont* font, Player* player, Level** level, int* minBoxes, int* maxBoxes, Assets* assets, int* numPokemons, sfMusic* menuMusic);
 int displayGameMenu(sfRenderWindow *window, Assets *assets, sfMusic* menuMusic, GameSettings* settings, sfMusic* levelMusic);
@@ -98,5 +98,6 @@ int settings(sfRenderWindow* window, GameSettings* game_set, sfMusic* menuMusic,
 void renderLevel(sfRenderWindow* window, Level* level, Assets assets, int numPokemons, int animationDirection, GameSettings* settings, sfFont* font, int moveCounter, sfClock* gameClock);
 sfTexture* customCharacter(sfRenderWindow* window, Assets assets);
 void apply_sound_settings(GameSettings* game_set, sfMusic* menuMusic, sfMusic* levelMusic);
+bool playerCanReach(Level* level, Position player, int x, int y);
 
 #endif // SOKOBAN_H
